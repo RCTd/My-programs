@@ -10,8 +10,8 @@ char m[INALTIME+2][LATIME+2];
 int n[INALTIME+2][LATIME+2];
 using namespace std;
 int c=15,w;char ch='0';
-ofstream g,g1,g2;int k;
-ifstream f,f1;string fn,fm,tx,fm1,de,d1,d2;
+ofstream g,g1,g2;int k;char tx1[LATIME];
+ifstream f,f1;string fn,fm,fm1,tx,de,d1,d2;
 void border()
 {
     for(int i=0;i<INALTIME;i++)
@@ -105,17 +105,24 @@ void meniu()
         if(GetAsyncKeyState(0x4F))//O
         {
             exit1=false;fm='\0';fn='\0';
-            cin>>fm;fn=fm+"n.txt";int i=0;
+            cin>>fm;fn=fm+"n.txt";int i=0,j=0;
             fm+=".txt";system("CLS");
             f.open(fm.c_str());
             f1.open(fn.c_str());
             while(getline(f,tx))
+            //for(int x=0;x<INALTIME*LATIME;x++)
             {
-                i++;f1>>c;
+                tx1=tx.c_str();
+                j++;
+                f1>>c;
+                n[i][j]=c;
+                m[i][j]=tx1;
                 SetConsoleTextAttribute(hOut,c);
                 cout<<tx;
-                if(i==LATIME)
-                    cout<<"\n";
+                if(j==LATIME)
+                {
+                    i++;j=0;
+                }
             }
             cout<<"Use arrow keys to move the red dot; ESC to exit;";
             cout<<"\nTAB to drow; CTRL to enter meniu; SHIFT to erase;";
