@@ -9,7 +9,7 @@ HANDLE hOut;
 char m[INALTIME+2][LATIME+2];
 int n[INALTIME+2][LATIME+2];
 using namespace std;
-int c=15,w;char ch='0';
+int c=15,w,aci;char ch='0',men;
 ofstream g,g1,g2;int k;char tx1[LATIME];
 ifstream f,f1;string fn,fm,fm1,tx,de,d1,d2;
 void border()
@@ -66,13 +66,14 @@ void meniu()
         SetConsoleTextAttribute(hOut,15);
         cout<<"C-to clear the screen;\nO-to open an existing file;\n";
         cout<<"S-to save the file;\nE-to exit meniu;\nQ-to delete a file;\n";
-        if(GetAsyncKeyState(0x51))//Q
+        cin>>men;
+        if((men==113)||(men==81))//Q
         {
             cin>>de;d1=de+"n.txt";d2=de+"d.txt";de+=".txt";
             remove(de.c_str());remove(d1.c_str());remove(d2.c_str());
             exit=false;
         }
-        if(GetAsyncKeyState(0x53))//S
+        if((men==83)||(men==115))//S
         {
             exit=false;cin>>fm;
             fn=fm+"n.txt";
@@ -83,7 +84,7 @@ void meniu()
             {
                 for(int j=0;j<LATIME;j++)
                 {
-                    g<<m[i][j];g<<"\n";
+                    g<<+m[i][j];g<<"\n";
                     g1<<n[i][j];g1<<"\n";
                     g2<<m[i][j];
                 }
@@ -91,38 +92,30 @@ void meniu()
             }
             g.close();g1.close();g2.close();
         }
-        if(GetAsyncKeyState(0x43))//C
+        if((men==67)||(men==99))//C
         {
             exit1=false;
             system("CLS");
             border();
         }
-        if((GetAsyncKeyState(0x45))||(exit==false))//E
-        {
-            aga();
-            exit=false;
-        }
-        if(GetAsyncKeyState(0x4F))//O
+        if((men==69)||(men==101)||(exit==false))//E
+            {aga();exit=false;}
+        if((men==79)||(men==111))//O
         {
             exit1=false;fm='\0';fn='\0';
             cin>>fm;fn=fm+"n.txt";int i=0,j=0;
             fm+=".txt";system("CLS");
             f.open(fm.c_str());
             f1.open(fn.c_str());
-            while(getline(f,tx))
-            //for(int x=0;x<INALTIME*LATIME;x++)
+            //while(f.get(m[i][j]))
+            for(int x=0;x<INALTIME*LATIME;x++)
             {
-                tx1=tx.c_str();
-                j++;
-                f1>>c;
-                n[i][j]=c;
-                m[i][j]=tx1;
+                f1>>c;n[i][j]=c;f>>aci;
+                m[i][j]=aci;j++;
                 SetConsoleTextAttribute(hOut,c);
-                cout<<tx;
+                cout<<m[i][j];
                 if(j==LATIME)
-                {
-                    i++;j=0;
-                }
+                    {i++;j=0;}
             }
             cout<<"Use arrow keys to move the red dot; ESC to exit;";
             cout<<"\nTAB to drow; CTRL to enter meniu; SHIFT to erase;";
@@ -152,13 +145,11 @@ struct ball
         }else
         {
             if(m[p.Y][p.X]==' ')
-            {
-                cout<<' ';m[p.Y][p.X]=' ';
+                {cout<<' ';m[p.Y][p.X]=' ';
             }else
             {
                 if(GetAsyncKeyState(VK_SHIFT))
-                {
-                    cout<<' ';m[p.Y][p.X]=' ';
+                    {cout<<' ';m[p.Y][p.X]=' ';
                 }else
                 {
                     w=n[p.Y][p.X];
@@ -193,8 +184,6 @@ int main()
         else
             if(GetAsyncKeyState(VK_UP)&&b.y!=1)
                 b.y-=1;
-        if(GetAsyncKeyState(VK_CONTROL))
-            meniu();
         if(GetAsyncKeyState(0x48))//H
         {
             SetConsoleCursorPosition(hOut,f);
@@ -212,6 +201,8 @@ int main()
             }
             cin>>c;c+=8;aga();
         }
+        if(GetAsyncKeyState(VK_CONTROL))
+            meniu();
         b.draw();
         Sleep(INTARZIERE);
     }
