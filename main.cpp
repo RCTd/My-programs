@@ -12,6 +12,13 @@ using namespace std;
 int c=15,w,aci;char ch='0',men;
 ofstream g,g1,g2;int k;char tx1[LATIME];
 ifstream f,f1;string fn,fm,fm1,tx,de,d1,d2;
+void inst()
+{
+    SetConsoleTextAttribute(hOut,15);
+    cout<<"Use arrow keys to move the red dot; ESC to exit;";
+    cout<<"\nTAB to drow; CTRL to enter meniu; SHIFT to erase;";
+    cout<<"\nH-to change the character; D-to change the colorc;";
+}
 void border()
 {
     for(int i=0;i<INALTIME;i++)
@@ -40,9 +47,7 @@ void border()
         cout<<'-';
         m[INALTIME-2][i]='-';
     }
-    SetConsoleTextAttribute(hOut,15);
-    cout<<"\nUse arrow keys to move the red dot; ESC to exit;\nTAB to drow; CTRL to enter meniu; SHIFT to erase;";
-    cout<<"\nH-to change the character; D-to change the colorc;";
+    inst();
 }
 void aga()
 {
@@ -54,8 +59,7 @@ void aga()
             SetConsoleTextAttribute(hOut,k);
             cout<<m[i][j];
         }
-    cout<<"Use arrow keys to move the red dot; ESC to exit;\nTAB to drow; CTRL to enter meniu; SHIFT to erase;";
-    cout<<"\nH-to change the character; D-to change the colorc;";
+    inst();
 }
 void meniu()
 {
@@ -107,20 +111,15 @@ void meniu()
             fm+=".txt";system("CLS");
             f.open(fm.c_str());
             f1.open(fn.c_str());
-            //while(f.get(m[i][j]))
-            for(int x=0;x<INALTIME*LATIME;x++)
-            {
-                f1>>c;n[i][j]=c;f>>aci;
-                m[i][j]=aci;j++;
-                SetConsoleTextAttribute(hOut,c);
-                cout<<m[i][j];
-                if(j==LATIME)
-                    {i++;j=0;}
-            }
-            cout<<"Use arrow keys to move the red dot; ESC to exit;";
-            cout<<"\nTAB to drow; CTRL to enter meniu; SHIFT to erase;";
-            cout<<"\nH-to change the character; D-to change the colorc;";
-            f.close();f1.close();c=15;
+            for(int i=0; i<INALTIME; i++)
+                for(int j=0; j<LATIME; j++)
+                {
+                    f1>>c;n[i][j]=c;f>>aci;
+                    m[i][j]=aci;
+                    SetConsoleTextAttribute(hOut,c);
+                    cout<<m[i][j];
+                }
+            inst();f.close();f1.close();c=15;
         }
         Sleep(INTARZIERE+50);
     }
@@ -189,16 +188,22 @@ int main()
             SetConsoleCursorPosition(hOut,f);
             cin>>ch;
             SetConsoleCursorPosition(hOut,f);
-            cout<<" ";
+            cout<<"            ";
         }
         if(GetAsyncKeyState(0x44))//D
         {
+            int t=4,a=247/t-5;
             system("CLS");
-            for(int i=1;i!=8;i++)
+            for(int i=-8; i!=a; i++)
             {
-                SetConsoleTextAttribute(hOut,i+8);
-                cout<<"Press "<<i<<" for this color\n";
+                for(int c=0; c<t; c++)
+                {
+                    SetConsoleTextAttribute(hOut,i+c*(a+8)+8);
+                    cout<<i+c*(a+8)<<" for this color; ";
+                }
+                cout<<"\n";
             }
+            SetConsoleTextAttribute(hOut,15);
             cin>>c;c+=8;aga();
         }
         if(GetAsyncKeyState(VK_CONTROL))
