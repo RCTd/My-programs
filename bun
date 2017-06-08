@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <conio.h>
+#include <direct.h>
 #include <windows.h>
 #define LATIME 79// 79-maxim
 #define INALTIME 58// 58-maxim
@@ -14,7 +15,8 @@ ofstream g,g1,g2;ifstream f1,f;
 string fn,fm,fm1;
 void name2()
 {
-    fm="C:/"+fm;
+    fm="C:/desene/"+fm+"/"+fm;
+    mkdir(fm.c_str());
     fn=fm+"n.txt";fm1=fm+"d.txt";fm=fm+".txt";
 }
 void inst()
