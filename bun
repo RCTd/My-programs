@@ -14,7 +14,7 @@ ofstream g,g1,g2;ifstream f1,f;
 string fn,fm,fm1;
 void name2()
 {
-    fm="D:/c++/paint/desene/"+fm;
+    fm="C:/"+fm;
     fn=fm+"n.txt";fm1=fm+"d.txt";fm=fm+".txt";
 }
 void inst()
