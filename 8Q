@@ -23,10 +23,8 @@ int main()
                 t[a][p[a]]=1;
                 for(int i=0; i<8&&ex==false; i++)
                 {
-                    for(int c=0; c<8&&ex==false; c++)
-                        if((p[c]==a)&&(c==i)&&(c!=a))
-                            ex=true;
-                    t[i][a]=1;
+                    for(int c=0; c<8&&ex==false; c++)if((p[c]==p[a])&&(c==i)&&(c!=a))ex=true;
+                    t[i][p[a]]=1;
                 }
                 for(int i=a,j=p[a]; i<8&&j<8&&ex==false; i++,j++)
                 {
