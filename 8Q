@@ -3,7 +3,7 @@
 #include <windows.h>
 using namespace std;
 void da();
-int p[8];
+int p[8];//={4,2,0,6,1,7,5,3};
 int y=0,x=0;
 bool ex=false;
 int t[8][8];
@@ -14,7 +14,7 @@ int main()
     while((x<8)||(p[0]<8))
     {
         ex=false;
-        while(ex==false)
+        while((ex==false)&&((x<8)||(p[0]<8)))
         {
             if(p[x]==8){ex=true;y--;p[x]--;}
             system("CLS");
