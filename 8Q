@@ -2,7 +2,7 @@
 #include <vector>
 #include <windows.h>
 using namespace std;
-int p[8];//={4,2,0,6,1,7,5,3};
+int p[8];//={2,4,1,7,0,6,3,5};
 int y=0,x=0;
 bool ex=false;
 int c,i,j,a;
