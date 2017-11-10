@@ -1,0 +1,86 @@
+#include <iostream>
+#include <fstream>
+#include <windows.h>
+using namespace std;
+HANDLE hout =GetStdHandle(STD_OUTPUT_HANDLE);
+HANDLE hin  =GetStdHandle(STD_INPUT_HANDLE);
+INPUT_RECORD InputRecord;DWORD Events;
+ifstream f("tic.in");
+void gotoxy(int x,int y);
+int main()
+{
+    cout<<" | | 0\n";
+    cout<<"-+-+-\n";
+    cout<<" | | 1 y\n";
+    cout<<"-+-+-\n";
+    cout<<" | | 2\n";
+    cout<<"0 1 2\n";
+    cout<<"  x";
+    char c='X';
+    bool ex=true;
+    int x=0,y=0,i,j,k,q,s,t[3][3],v=1;
+    for(i=0;i<3;i++)
+        for(j=0;j<3;j++)
+            t[i][j]=3;
+    while(ex==true)
+    {
+        IMP:
+        gotoxy(0,7);        //
+        cout<<"x=";cin>>x;  //
+        cout<<"y=";cin>>y;  //
+        if(t[y][x]!=3||(x>2||x<0||y>2||y<0))
+            goto IMP;
+        gotoxy(x*2,y*2);
+        cout<<c;
+        t[y][x]=v;
+        k=0;
+        q=0;
+        for(i=0; i<3; i++)
+        {
+            if(t[i][x]==v)
+                k++;
+            if(t[y][i]==v)
+                q++;
+        }
+        if(k!=3&&q!=3)
+        {
+            k=0;
+            s=x+y;
+            if(s%2==0)
+            {
+                if(s==2)
+                {
+                    for(i=2,j=0; j<3; j++,i--)
+                        if(t[i][j]==v)
+                            k++;
+                }
+            }
+            else
+                for(i=0,j=0; j<3; j++,i++)
+                    if(t[i][j]==v)
+                        k++;
+
+        }
+        if(q>2)
+            ex=false;
+        if(k>2)
+            ex=false;
+        if(c=='X')
+        {
+            c='O';
+            v=0;
+        }
+        else
+        {
+            c='X';
+            v=1;
+        }
+    }
+}
+void gotoxy(int x,int y)
+{
+    COORD coord;
+    coord.X=x;
+    coord.Y=y;
+    SetConsoleCursorPosition(hout,coord);
+}
