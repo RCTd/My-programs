@@ -9,25 +9,37 @@ ifstream f("tic.in");
 void gotoxy(int x,int y);
 int main()
 {
-    cout<<" | | 0\n";
+    SMALL_RECT DisplayArea= {0,0,10,10};
+    SetConsoleWindowInfo(hout,TRUE,&DisplayArea);
+    char c;int x,y,i,j,k,q,s,t[3][3],v,a,p1=0,p2=0;
+    RET:gotoxy(0,0);
+    for(i=0;i<7;i++)
+        cout<<"          \n";
+    gotoxy(0,0);c='X';x=0;y=0;v=1;a=0;
+    cout<<" | |\n";
     cout<<"-+-+-\n";
-    cout<<" | | 1 y\n";
+    cout<<" | |\n";
     cout<<"-+-+-\n";
-    cout<<" | | 2\n";
-    cout<<"0 1 2\n";
-    cout<<"  x";
-    char c='X';
-    bool ex=true;
-    int x=0,y=0,i,j,k,q,s,t[3][3],v=1;
+    cout<<" | |\n";
+    cout<<"X:"<<p1<<" O:"<<p2;
     for(i=0;i<3;i++)
         for(j=0;j<3;j++)
             t[i][j]=3;
-    while(ex==true)
+    while(a<9)
     {
         IMP:
-        gotoxy(0,7);        //
-        cout<<"x=";cin>>x;  //
-        cout<<"y=";cin>>y;  //
+        while(!GetAsyncKeyState(VK_LBUTTON))
+        {
+            if(GetAsyncKeyState(VK_CONTROL))
+                p1^=p2^=p1^=p2;
+            ReadConsoleInput(hin,&InputRecord,1,&Events);
+            x=InputRecord.Event.MouseEvent.dwMousePosition.X;
+            y=InputRecord.Event.MouseEvent.dwMousePosition.Y;
+            x/=2;y/=2;
+        }
+        gotoxy(0,5);
+        cout<<"X:"<<p1<<" O:"<<p2;
+        Sleep(100);
         if(t[y][x]!=3||(x>2||x<0||y>2||y<0))
             goto IMP;
         gotoxy(x*2,y*2);
@@ -54,17 +66,13 @@ int main()
                         if(t[i][j]==v)
                             k++;
                 }
+                else
+                    for(i=0,j=0; j<3; j++,i++)
+                        if(t[i][j]==v)
+                            k++;
             }
-            else
-                for(i=0,j=0; j<3; j++,i++)
-                    if(t[i][j]==v)
-                        k++;
-
         }
-        if(q>2)
-            ex=false;
-        if(k>2)
-            ex=false;
+        a++;if(q>2||k>2)a=9;
         if(c=='X')
         {
             c='O';
@@ -76,6 +84,24 @@ int main()
             v=1;
         }
     }
+    gotoxy(0,5);
+    if(k==3||q==3)
+    {
+        if(c=='X')
+        {
+            p2++;
+            cout<<"\nO Wins!";
+        }
+        else
+        {
+            p1++;
+            cout<<"\nX Wins!";
+        }
+    }
+    else
+        cout<<'\n'<<"Its a tie";
+    getchar();
+    goto RET;
 }
 void gotoxy(int x,int y)
 {
