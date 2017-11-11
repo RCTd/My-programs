@@ -9,10 +9,10 @@ void gotoxy(int x,int y);
 void color(int x);
 int main()
 {
-    int t[3][3][3][3],a[3][3],x,y,X,Y,i,j,x1,y1,mo;
-    int v,lx0,lx,ly0,ly,w,k,q,s,g=0,p1=0,p2=0,p=0;
+    long long t[3][3][3][3],a[3][3],x,y,X,Y,i,j,x1,y1,mo;
+    long long v,lx0,lx,ly0,ly,w,k,q,s,g=0,p1=0,p2=0,p=0;
     char c;bool d;
-    cout<<"1 for players 2 for computers";
+    cout<<"1-PvP 2-CvC 3-PvC: ";
     cin>>mo;
     RET:
     for(i=0;i<3;i++)
@@ -61,7 +61,7 @@ int main()
         cout<<"X:"<<p1<<" O:"<<p2<<" Ties:"<<p;
         cout<<"\nGames:"<<g;
         IMP:
-        if(mo==1)
+        if(mo==1||(mo==3&&c=='X'))
         {
             while(!GetAsyncKeyState(VK_LBUTTON))
             {
@@ -77,8 +77,8 @@ int main()
             Sleep(200);
         }
         if(GetAsyncKeyState(VK_ESCAPE))
-            Sleep(1000);
-        if(mo==2)
+            cin>>mo;
+        if(mo==2||(mo==3&&c=='O'))
         {
             x=rand()%(lx-lx0+1)+lx0;
             y=rand()%(ly-ly0+1)+ly0;
@@ -126,7 +126,7 @@ int main()
             if(t[Y][X][1][i]!=0)j++;
             if(t[Y][X][2][i]!=0)j++;
         }
-        if(j==3)
+        if(j==9)
             a[Y][X]=3;
         w++;if(q>2||k>2)
         {
