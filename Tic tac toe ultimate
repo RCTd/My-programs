@@ -1,0 +1,127 @@
+#include <iostream>
+#include <windows.h>
+using namespace std;
+HANDLE hout =GetStdHandle(STD_OUTPUT_HANDLE);
+HANDLE hin  =GetStdHandle(STD_INPUT_HANDLE);
+INPUT_RECORD InputRecord;DWORD Events;
+void gotoxy(int x,int y);
+int main()
+{
+    int t[3][3][3][3]={{{0}}},a[3][3]={{0}},x=0,y=0,X,Y,i,j,x1,y1;
+    int v=1,lx0=0,lx=16,ly0=0,ly=16,w=0,k,q,s;
+    char c='X';bool d=true;
+    for(i=0;i<17;i++)
+    {
+        if(i%2==0)
+            cout<<" | | | | | | | |\n";
+        else
+            if(i==5||i==11)
+                cout<<"-----+-----+-----\n";
+            else
+                cout<<"-+-+-|-+-+-|-+-+-\n";
+    }
+    while(w<81)
+    {
+        IMP:
+        while(!GetAsyncKeyState(VK_LBUTTON))
+        {
+            ReadConsoleInput(hin,&InputRecord,1,&Events);
+            x=InputRecord.Event.MouseEvent.dwMousePosition.X;
+            y=InputRecord.Event.MouseEvent.dwMousePosition.Y;
+        }
+        Sleep(200);
+        x1=x;y1=y;x/=2;y/=2;
+        while(x>=3)x-=3;
+        while(y>=3)y-=3;
+        if(d==true)
+        {
+            if(x1/2<3)X=0;else
+                if(x1/2>5)X=2;
+                else X=1;
+            if(y1/2<3)Y=0;else
+                if(y1/2>5)Y=2;
+                else Y=1;
+        }
+        if(t[Y][X][y][x]!=0||(x1>lx||x1<lx0||y1>ly||y1<ly0)||x1%2!=0||y1%2!=0)
+            goto IMP;
+        gotoxy(x1,y1);
+        cout<<c;
+        t[Y][X][y][x]=v;
+        k=0;q=0;
+        for(i=0; i<3; i++)
+        {
+            if(t[Y][X][i][x]==v)k++;
+            if(t[Y][X][y][i]==v)q++;
+        }
+        if(k!=3&&q!=3)
+        {
+            k=0;q=0;s=x+y;
+            if(s%2==0)
+            {
+                for(i=2,j=0; j<3; j++,i--)
+                    if(t[Y][X][i][j]==v)k++;
+                for(i=0,j=0; j<3; j++,i++)
+                    if(t[Y][X][i][j]==v)q++;
+            }
+        }
+        w++;if(q>2||k>2)
+        {
+            a[Y][X]=v;
+            for(i=0;i<3;i++)
+                for(j=0;j<3;j++)
+                {
+                    gotoxy((i+3*X)*2,(j+3*Y)*2);
+                    cout<<c;
+                }
+            k=0;q=0;
+            for(i=0; i<3; i++)
+            {
+                if(a[i][X]==v)k++;
+                if(a[Y][i]==v)q++;
+            }
+            if(k!=3&&q!=3)
+            {
+                k=0;q=0;s=X+Y;
+                if(s%2==0)
+                {
+                    for(i=2,j=0; j<3; j++,i--)
+                        if(a[i][j]==v)k++;
+                    for(i=0,j=0; j<3; j++,i++)
+                        if(a[i][j]==v)q++;
+                }
+            }
+            if(q>2||k>2)w=81;
+        }
+        if(c=='X'){c='O';v=2;}
+        else{c='X';v=1;}
+        if(a[y][x]!=0)
+            d=true;
+        else d=false;
+        X=x;Y=y;
+        if(d==false)
+        {
+            if(x==0){lx0=0;lx=5;}    if(y==0){ly0=0;ly=5;}
+            if(x==1){lx0=5;lx=11;}   if(y==1){ly0=5;ly=11;}
+            if(x==2){lx0=11;lx=16;}  if(y==2){ly0=11;ly=16;}
+        }else
+        {
+            lx0=0;lx=16;ly0=0;ly=16;
+        }
+    }
+    gotoxy(0,17);
+    if(k==3||q==3)
+    {
+        if(c=='X')
+            cout<<"O Wins!";
+        else
+            cout<<"X Wins!";
+    }else
+        cout<<"Its a tie";
+}
+void gotoxy(int x,int y)
+{
+    COORD coord;
+    coord.X=x;
+    coord.Y=y;
+    SetConsoleCursorPosition(hout,coord);
+}
