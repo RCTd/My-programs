@@ -9,11 +9,10 @@ void gotoxy(int x,int y);
 void color(int x);
 int main()
 {
-    long long t[3][3][3][3],a[3][3],x,y,X,Y,i,j,x1,y1,mo;
-    long long v,lx0,lx,ly0,ly,w,k,q,s,g=0,p1=0,p2=0,p=0;
+    int t[3][3][3][3],a[3][3],x[2],y[2],i,j,x1,y1,mo=1,l=9,xo=1,yo=1;
+    int v,lx0,lx,ly0,ly,w,k,q,s,g=0,p1=0,p2=0,p=0,e=l*2-2;
     char c;bool d;
-    cout<<"1-PvP 2-CvC 3-PvC: ";
-    cin>>mo;
+    //cout<<"1-PvP\n2-CvC\n3-PvC:";cin>>mo;
     RET:
     for(i=0;i<3;i++)
         for(j=0;j<3;j++)
@@ -24,41 +23,88 @@ int main()
                     t[i][j][k][q]=0;
         }
     v=1;lx0=0;lx=16;ly0=0;ly=16;w=0;
-    c='X';d=true;
+    c='X';d=true;x[0]=0;x[1]=0;
+    y[0]=0;y[1]=0;
     gotoxy(0,0);
-    for(i=0;i<40;i++)
-        cout<<"                                             ";
+    //for(i=0;i<40;i++)
+      //  cout<<"                                             ";
     gotoxy(0,0);
     srand((int)time(0));
-    for(i=0;i<17;i++)
+    for(i=0;i<e+1;i++)
     {
         if(i%2==0)
         {
-            color(7);cout<<" | | ";
-            color(15);cout<<'|';
-            color(7);cout<<" | | ";
-            color(15);cout<<'|';
-            color(7);cout<<" | |\n";
+            for(j=0;j<=e;j++)
+                if(j%2==0)
+                    {color(7);cout<<" ";}
+                else
+                    if((j+1)%6==0)
+                        {color(15);cout<<'|';}
+                    else
+                        {color(7);cout<<'|';}
+            cout<<'\n';
         }
         else
-            if(i==5||i==11)
+            if((i+1)%6==0)
             {
                 color(15);
-                cout<<"-----+-----+-----\n";
+                for(j=0;j<=e;j++)
+                if((j+1)%6!=0)
+                    cout<<"-";
+                else
+                    cout<<'+';
+            cout<<'\n';
             }
             else
             {
-                color(7);cout<<"-+-+-";
-                color(15);cout<<'|';
-                color(7);cout<<"-+-+-";
-                color(15);cout<<'|';
-                color(7);cout<<"-+-+-\n";
+                for(j=0;j<=e;j++)
+                if(j%2==0)
+                    {color(7);cout<<"-";}
+                else
+                    if((j+1)%6==0)
+                        {color(15);cout<<'|';}
+                    else
+                        {color(7);cout<<'+';}
+            cout<<'\n';
             }
     }
     while(w<81)
     {
+        color(14);xo=1;yo=1;
+        if(d==true)
+        {
+            for(i=0;i<3;i++)
+            {
+                for(j=0;j<3;j++)
+                {
+                    gotoxy(xo,yo);cout<<'+';
+                    gotoxy(xo+2,yo);cout<<'+';
+                    gotoxy(xo,yo+2);cout<<'+';
+                    gotoxy(xo+2,yo+2);cout<<'+';
+                    xo+=6;
+                }
+                xo=1;
+                yo+=6;
+            }
+        }else
+        {
+            for(i=0;i<x[1];i++)xo+=6;
+            for(i=0;i<y[1];i++)yo+=6;
+            gotoxy(xo,yo);cout<<'+';
+            gotoxy(xo+2,yo);cout<<'+';
+            gotoxy(xo,yo+2);cout<<'+';
+            gotoxy(xo+2,yo+2);cout<<'+';
+        }
         gotoxy(0,17);color(15);
-        cout<<"X:"<<p1<<" O:"<<p2<<" Ties:"<<p;
+        if(c=='X')
+        {
+            color(12);cout<<"X:";color(15);
+            cout<<p1<<" O:"<<p2<<" Ties:"<<p;
+        }else
+        {
+            cout<<"X:"<<p1;color(10);cout<<" O:";
+            color(15);cout<<p2<<" Ties:"<<p;
+        }
         cout<<"\nGames:"<<g;
         IMP:
         if(mo==1||(mo==3&&c=='X'))
@@ -71,8 +117,8 @@ int main()
                     Sleep(100);
                 }
                 ReadConsoleInput(hin,&InputRecord,1,&Events);
-                x=InputRecord.Event.MouseEvent.dwMousePosition.X;
-                y=InputRecord.Event.MouseEvent.dwMousePosition.Y;
+                x[0]=InputRecord.Event.MouseEvent.dwMousePosition.X;
+                y[0]=InputRecord.Event.MouseEvent.dwMousePosition.Y;
             }
             Sleep(200);
         }
@@ -80,22 +126,22 @@ int main()
             cin>>mo;
         if(mo==2||(mo==3&&c=='O'))
         {
-            x=rand()%(lx-lx0+1)+lx0;
-            y=rand()%(ly-ly0+1)+ly0;
+            x[0]=rand()%(lx-lx0+1)+lx0;
+            y[0]=rand()%(ly-ly0+1)+ly0;
         }
-        x1=x;y1=y;x/=2;y/=2;
-        while(x>=3)x-=3;
-        while(y>=3)y-=3;
+        x1=x[0];y1=y[0];x[0]/=2;y[0]/=2;
+        while(x[0]>=3)x[0]-=3;
+        while(y[0]>=3)y[0]-=3;
         if(d==true)
         {
-            if(x1/2<3)X=0;else
-                if(x1/2>5)X=2;
-                else X=1;
-            if(y1/2<3)Y=0;else
-                if(y1/2>5)Y=2;
-                else Y=1;
+            if(x1/2<3)x[1]=0;else
+                if(x1/2>5)x[1]=2;
+                else x[1]=1;
+            if(y1/2<3)y[1]=0;else
+                if(y1/2>5)y[1]=2;
+                else y[1]=1;
         }
-        if(t[Y][X][y][x]!=0||(x1>lx||x1<lx0||y1>ly||y1<ly0)||x1%2!=0||y1%2!=0)
+        if(t[y[1]][x[1]][y[0]][x[0]]!=0||(x1>lx||x1<lx0||y1>ly||y1<ly0)||x1%2!=0||y1%2!=0)
             goto IMP;
         gotoxy(x1,y1);
         if(c=='X')
@@ -103,58 +149,58 @@ int main()
         else
             color(10);
         cout<<c;
-        t[Y][X][y][x]=v;
+        t[y[1]][x[1]][y[0]][x[0]]=v;
         k=0;q=0;
         for(i=0; i<3; i++)
         {
-            if(t[Y][X][i][x]==v)k++;
-            if(t[Y][X][y][i]==v)q++;
+            if(t[y[1]][x[1]][i][x[0]]==v)k++;
+            if(t[y[1]][x[1]][y[0]][i]==v)q++;
         }
         if(k!=3&&q!=3)
         {
-            k=0;q=0;s=x+y;
+            k=0;q=0;s=x[0]+y[0];
             if(s%2==0)
             {
                 for(i=2,j=0; j<3; j++,i--)
-                    if(t[Y][X][i][j]==v)k++;
+                    if(t[y[1]][x[1]][i][j]==v)k++;
                 for(i=0,j=0; j<3; j++,i++)
-                    if(t[Y][X][i][j]==v)q++;
+                    if(t[y[1]][x[1]][i][j]==v)q++;
             }
         }for(i=0,j=0;i<3;i++)
         {
-            if(t[Y][X][0][i]!=0)j++;
-            if(t[Y][X][1][i]!=0)j++;
-            if(t[Y][X][2][i]!=0)j++;
+            if(t[y[1]][x[1]][0][i]!=0)j++;
+            if(t[y[1]][x[1]][1][i]!=0)j++;
+            if(t[y[1]][x[1]][2][i]!=0)j++;
         }
         if(j==9)
-            a[Y][X]=3;
+            a[y[1]][x[1]]=3;
         w++;if(q>2||k>2)
         {
-            a[Y][X]=v;
+            a[y[1]][x[1]]=v;
             for(i=0;i<3;i++)
                 for(j=0;j<3;j++)
                 {
-                    gotoxy((j+3*X)*2,(i+3*Y)*2);
+                    gotoxy((j+3*x[1])*2,(i+3*y[1])*2);
                     if(c=='X')
                         SetConsoleTextAttribute(hout,12);
                     else
                         SetConsoleTextAttribute(hout,10);
-                    if(t[Y][X][i][j]==0)
+                    if(t[y[1]][x[1]][i][j]==0)
                     {
                         w++;
-                        t[Y][X][i][j]=v;
+                        t[y[1]][x[1]][i][j]=v;
                     }
                     cout<<c;
                 }
             k=0;q=0;
             for(i=0; i<3; i++)
             {
-                if(a[i][X]==v)k++;
-                if(a[Y][i]==v)q++;
+                if(a[i][x[1]]==v)k++;
+                if(a[y[1]][i]==v)q++;
             }
             if(k!=3&&q!=3)
             {
-                k=0;q=0;s=X+Y;
+                k=0;q=0;s=x[1]+y[1];
                 if(s%2==0)
                 {
                     for(i=2,j=0; j<3; j++,i--)
@@ -167,18 +213,51 @@ int main()
         }
         if(c=='X'){c='O';v=2;}
         else{c='X';v=1;}
-        if(a[y][x]!=0)
+        color(7);xo=1;yo=1;
+        if(d==true)
+        {
+            for(i=0;i<3;i++)
+            {
+                for(j=0;j<3;j++)
+                {
+                    gotoxy(xo,yo);cout<<'+';
+                    gotoxy(xo+2,yo);cout<<'+';
+                    gotoxy(xo,yo+2);cout<<'+';
+                    gotoxy(xo+2,yo+2);cout<<'+';
+                    xo+=6;
+                }
+                xo=1;
+                yo+=6;
+            }
+        }else
+        {
+            for(i=0;i<x[1];i++)xo+=6;
+            for(i=0;i<y[1];i++)yo+=6;
+            gotoxy(xo,yo);cout<<'+';
+            gotoxy(xo+2,yo);cout<<'+';
+            gotoxy(xo,yo+2);cout<<'+';
+            gotoxy(xo+2,yo+2);cout<<'+';
+        }
+        if(a[y[0]][x[0]]!=0)
             d=true;
         else d=false;
-        X=x;Y=y;
+        x[1]=x[0];y[1]=y[0];
         if(d==false)
         {
-            if(x==0){lx0=0;lx=5;}    if(y==0){ly0=0;ly=5;}
-            if(x==1){lx0=5;lx=11;}   if(y==1){ly0=5;ly=11;}
-            if(x==2){lx0=11;lx=16;}  if(y==2){ly0=11;ly=16;}
+            if(x[0]==0){lx0=0;lx=5;}    if(y[0]==0){ly0=0;ly=5;}
+            if(x[0]==1){lx0=5;lx=11;}   if(y[0]==1){ly0=5;ly=11;}
+            if(x[0]==2){lx0=11;lx=16;}  if(y[0]==2){ly0=11;ly=16;}
         }else
         {
             lx0=0;lx=16;ly0=0;ly=16;
+            if(a[0][0]!=0&&a[0][1]!=0&&a[0][2]!=0)
+                ly0=5;
+            if(a[0][0]!=0&&a[1][0]!=0&&a[2][0]!=0)
+                lx0=5;
+            if(a[2][0]!=0&&a[2][1]!=0&&a[2][2]!=0)
+                ly=11;
+            if(a[0][2]!=0&&a[1][2]!=0&&a[2][2]!=0)
+                lx=11;
         }
     }
     gotoxy(0,18);
@@ -197,7 +276,7 @@ int main()
         }
     }else
     {
-        cout<<"Its a tie";
+        cout<<"Tie";
         p++;
     }
     g++;
