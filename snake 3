@@ -10,7 +10,7 @@ HANDLE hin =GetStdHandle(STD_INPUT_HANDLE);
 void gotoxy(int x,int y);void border(int lx,int ly);
 void color(int c);void tail();
 int lx=LX,ly=LY,hx,hy,ax,ay,tx,ty,tx1,ty1,i,j,d,sc,d1;
-int t,ti=200,hs=0,cc=170,cs=255,cf=15,cm=204,bx,by,p1=0;
+int t,ti=5000/(lx+ly),hs=0,cc=170,cs=255,cf=15,cm=204,bx,by,p1=0;
 int s[50][50],hx1,hy1;
 bool g,p=true;
 int main()
@@ -19,7 +19,6 @@ int main()
     SetConsoleWindowInfo(hout,TRUE,&DisplayArea);
     //cout<<"LaturaX:";cin>>lx;
     //cout<<"LaturaY:";cin>>ly;
-    //cout<<"Speed:";cin>>ti;
     INC:srand (time(NULL));
     d=1;sc=0;d1=1;t=ti;g=false;
     system("CLS");
