@@ -78,26 +78,33 @@ int main()
             }else
             if(i==1)
             {
-                if(GetAsyncKeyState(0x57))  d[1][i]=1;//Directiile
-                if(GetAsyncKeyState(0x53))  d[1][i]=3;
-                if(GetAsyncKeyState(0x41))  d[1][i]=4;
-                if(GetAsyncKeyState(0x44))  d[1][i]=2;
+                if(GetAsyncKeyState('W'))  d[1][i]=1;//Directiile
+                if(GetAsyncKeyState('S'))  d[1][i]=3;
+                if(GetAsyncKeyState('A'))  d[1][i]=4;
+                if(GetAsyncKeyState('D'))  d[1][i]=2;
             }else
             if(i==2)
             {
-                if(GetAsyncKeyState(0x49))  d[1][i]=1;//Directiile
-                if(GetAsyncKeyState(0x4B))  d[1][i]=3;
-                if(GetAsyncKeyState(0x4A))  d[1][i]=4;
-                if(GetAsyncKeyState(0x4C))  d[1][i]=2;
+                if(GetAsyncKeyState('I'))  d[1][i]=1;//Directiile
+                if(GetAsyncKeyState('K'))  d[1][i]=3;
+                if(GetAsyncKeyState('J'))  d[1][i]=4;
+                if(GetAsyncKeyState('L'))  d[1][i]=2;
             }else
             if(i==3)
             {
-                if(GetAsyncKeyState(0x54))  d[1][i]=1;//Directiile
-                if(GetAsyncKeyState(0x47))  d[1][i]=3;
-                if(GetAsyncKeyState(0x46))  d[1][i]=4;
-                if(GetAsyncKeyState(0x48))  d[1][i]=2;
+                if(GetAsyncKeyState('T'))  d[1][i]=1;//Directiile
+                if(GetAsyncKeyState('G'))  d[1][i]=3;
+                if(GetAsyncKeyState('F'))  d[1][i]=4;
+                if(GetAsyncKeyState('H'))  d[1][i]=2;
+            }else
+            if(i==4)
+            {
+                if(GetAsyncKeyState('5'))  d[1][i]=1;//Directiile
+                if(GetAsyncKeyState('2'))  d[1][i]=3;
+                if(GetAsyncKeyState('1'))  d[1][i]=4;
+                if(GetAsyncKeyState('3'))  d[1][i]=2;
             }
-            if((d[1][i]!=d[0][i])&&((d[1][i]%2==0&&d[0][i]%2!=0)||(d[1][i]%2!=0&&d[0][i]%2==0))||(sc[i]==0))
+            if((d[1][i]!=d[0][i])&&((((d[1][i]%2==0&&d[0][i]%2!=0)||(d[1][i]%2!=0&&d[0][i]%2==0)))||(sc[i]==0)))
                 d[0][i]=d[1][i];
             s[h[0][i]][h[1][i]]=d[0][i];
             switch(d[0][i])
