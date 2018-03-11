@@ -4,14 +4,14 @@
 #define LX 40
 #define LY 40
 using namespace std;
-INPUT_RECORD InputRecord;DWORD Events;
+//INPUT_RECORD InputRecord;DWORD Events;
 HANDLE hout =GetStdHandle(STD_OUTPUT_HANDLE);
-HANDLE hin =GetStdHandle(STD_INPUT_HANDLE);
+//HANDLE hin =GetStdHandle(STD_INPUT_HANDLE);
 void gotoxy(int x,int y);void border(int lx,int ly);
 void color(int c);void tail(int i);void con(int z);
 int lx=LX,ly=LY,h[4][10],ax,ay,t[4][10],i,j,sc[10],d[2][10],s[50][50];
-int ti=150,tp=ti,tr=ti,hs=0,cc=170,cs=255,cf=15,cm=204,cb=15,b=0,z=1;
-bool p=true;char q[10][4];
+int ti=150,tp=ti,tr=ti,hs=0,cc=170,cs=255,cf=15,cm=204,cb=15,b=0,z=1,mm;
+bool p=true,m[10];char q[10][4];
 int main()
 {
     SMALL_RECT DisplayArea= {0,0,lx+25,ly+3};
@@ -45,10 +45,10 @@ int main()
     for(i=0;i<ly+1;i++)for(j=0;j<lx+1;j++)s[j][i]=0;//initializam vectorul 2D cu 0
     for(i=0;i<lx+1;i++){s[i][0]=7;s[i][ly+1]=7;}//  initializam marginile
     for(i=0;i<ly+1;i++){s[0][i]=7;s[lx+1][i]=7;}
-    system("CLS");border(lx,ly);
+    system("CLS");border(lx,ly);mm=z;
     for(i=0;i<z;i++)
     {
-        d[0][i]=0;sc[i]=0;d[1][i]=0;
+        d[0][i]=0;sc[i]=0;d[1][i]=0;m[i]=false;
         h[0][i]=lx/4+i*2;  h[1][i]=ly/4+i*2;t[0][i]=h[0][i];t[1][i]=h[1][i];
         ret1:ax=rand()%(lx-3)+1;ay=rand()%(ly-3)+1;
         color(cm);gotoxy(ax,ay);if(s[ax][ay]!=0)goto ret1;
@@ -57,9 +57,9 @@ int main()
     gotoxy(lx+5,3);cout<<"High scor ";gotoxy(lx+5,4);cout<<"Scor ";
     //gotoxy(lx+5,5);cout<<"Speed ";
     //......................................................................................................
-    while(1)
+    while(mm>0)
     {
-        for(i=0;i<z;i++)
+        for(i=0;i<z;i++)if(m[i]==false)
         {
             h[2][i]=h[0][i];h[3][i]=h[1][i];
             if(GetAsyncKeyState('1')){Sleep(200);while(!GetAsyncKeyState('1'))Sleep(300);}//Pause
@@ -114,7 +114,7 @@ int main()
                 if(h[0][i]==lx+1)h[0][i]=1;if(h[1][i]==ly+1)h[1][i]=1;
                 if(h[0][i]==0)h[0][i]=lx;if(h[1][i]==0)h[1][i]=ly;
             }
-            for(j=0;j<z;j++)if(j!=i)s[h[0][j]][h[1][j]]=8+j;
+            for(j=0;j<z;j++)if(j!=i&&m[j]==false)s[h[0][j]][h[1][j]]=8+j;
             //.............................................................................................................
             if(s[h[0][i]][h[1][i]]!=0)
             {
@@ -126,28 +126,26 @@ int main()
                 }else
                 if(h[0][i]==t[0][i]&&h[1][i]==t[1][i])tail(i);
                 else{
-                    goto FIN;
-                    if(s[h[0][i]][h[1][i]]<7)
+                    //goto FIN;
+                    m[i]=true;mm--;
+                    if(s[h[0][i]][h[1][i]]<8)for(j=0;j<sc[i]+1;j++)tail(i);
+                    else
                     {
-                        for(j=0;j<sc[i];j++)
-                        {
-                            gotoxy(t[0][i],t[1][i]);cout<<' ';
-                            switch(s[t[0][i]][t[1][i]])
-                            {
-                                case 1:t[0]++;
-                                case 2
-                            }
-                        }
+                        m[s[h[0][i]][h[1][i]]-8]=true;mm--;for(j=0;j<sc[i]+1;j++)tail(i);
+                        for(j=0;j<sc[s[h[0][i]][h[1][i]]-8]+1;j++)tail(s[h[0][i]][h[1][i]]-8);
                     }
                 }
             }
             else// stergem coada si inlocuim pozitia ei.................................................................
                 tail(i);
-            if(sc[i]>0){
-                color(cs);// schimba culoarea capului
-                gotoxy(h[2][i],h[3][i]);cout<<'0';
+            if(m[i]==false)
+            {
+                if(sc[i]>0){
+                    color(cs);// schimba culoarea capului
+                    gotoxy(h[2][i],h[3][i]);cout<<'0';
+                }
+                color(cc);gotoxy(h[0][i],h[1][i]);cout<<'0';//CAPUL
             }
-            color(cc);gotoxy(h[0][i],h[1][i]);cout<<'0';//CAPUL
             color(cf);gotoxy(lx+15,3);cout<<hs;gotoxy(lx+10,4);cout<<sc[0]+sc[1];
             //gotoxy(lx+12,5);cout<<"   ";gotoxy(lx+12,5);cout<<ti-tp;
         }
@@ -175,19 +173,13 @@ void border(int lx,int ly)
 }//........................................................................................................................................
 void tail(int i)
 {
-    color(cf);
-    t[2][i]=t[0][i];t[3][i]=t[1][i];
-    gotoxy(t[0][i],t[1][i]);cout<<' ';
-    if(s[t[0][i]][t[1][i]]==1)t[1][i]--;else
-    if(s[t[0][i]][t[1][i]]==2)t[0][i]++;else
-    if(s[t[0][i]][t[1][i]]==3)t[1][i]++;else
-    if(s[t[0][i]][t[1][i]]==4)t[0][i]--;
+    color(cf);t[2][i]=t[0][i];t[3][i]=t[1][i];gotoxy(t[0][i],t[1][i]);cout<<' ';
+    if(s[t[0][i]][t[1][i]]==1)t[1][i]--;else if(s[t[0][i]][t[1][i]]==2)t[0][i]++;else
+    if(s[t[0][i]][t[1][i]]==3)t[1][i]++;else if(s[t[0][i]][t[1][i]]==4)t[0][i]--;
     if(p==false)
     {
-        if(t[0][i]==lx+1)t[0][i]=1;
-        if(t[1][i]==ly+1)t[1][i]=1;
-        if(t[0][i]==0)t[0][i]=lx;
-        if(t[1][i]==0)t[1][i]=ly;
+        if(t[0][i]==lx+1)t[0][i]=1;if(t[1][i]==ly+1)t[1][i]=1;
+        if(t[0][i]==0)t[0][i]=lx;if(t[1][i]==0)t[1][i]=ly;
     }
     s[t[2][i]][t[3][i]]=0;
 }//........................................................................................................................................
