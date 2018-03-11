@@ -10,7 +10,7 @@ HANDLE hin =GetStdHandle(STD_INPUT_HANDLE);
 void gotoxy(int x,int y);void border(int lx,int ly);
 void color(int c);void tail(int i);void con(int z);void cca(int i);
 int lx=LX,ly=LY,h[4][10],ax,ay,t[4][10],i,j,sc[10],d[2][10],s[50][50],by,cb=15,b=0,z=1,mm,td=1,nm;
-int ti=150,tp=ti,tr=ti,hs=0,cc[10]={170,170,170,170,170,170,170,170,170,170},cs=255,cf=15,cm=204;
+int ti=150,tp=ti,tr=ti,hs=0,cc[10],cs=255,cf=15,cm=204;
 bool p=true,m[10];char q[10][4];
 int main()
 {
@@ -49,7 +49,7 @@ int main()
     system("CLS");border(lx,ly);mm=z;
     for(i=0;i<z;i++)
     {
-        d[0][i]=0;sc[i]=0;d[1][i]=0;m[i]=false;//cc[i]=170;
+        d[0][i]=0;sc[i]=0;d[1][i]=0;m[i]=false;if(cc[i]==0)cc[i]=170;
         h[0][i]=lx/4+i*2;  h[1][i]=ly/4+i*2;t[0][i]=h[0][i];t[1][i]=h[1][i];
     }
     for(i=0;i<nm;i++)
