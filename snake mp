@@ -263,10 +263,9 @@ void cca(int i)
     gotoxy(0,1);color(cf);cout<<"->";
     while(!GetAsyncKeyState(VK_RETURN))
     {
-        if(GetAsyncKeyState(VK_ESCAPE))goto CUL;
+        if(GetAsyncKeyState(VK_ESCAPE)){Sleep(100);goto CUL;}
         if(GetAsyncKeyState(VK_UP)&&b>1){gotoxy(0,b);cout<<"  ";b--;gotoxy(0,b);cout<<"->";Sleep(100);}
         if(GetAsyncKeyState(VK_DOWN)&&b<15){gotoxy(0,b);cout<<"  ";b++;gotoxy(0,b);cout<<"->";Sleep(100);}
     }
-    cc[i]=b*17;
-    CUL:color(cf);
+    cc[i]=b*17;CUL:color(cf);
 }
