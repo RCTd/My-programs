@@ -9,8 +9,8 @@ HANDLE hout =GetStdHandle(STD_OUTPUT_HANDLE);
 HANDLE hin =GetStdHandle(STD_INPUT_HANDLE);
 void gotoxy(int x,int y);void border(int lx,int ly);
 void color(int c);void tail(int i);void con(int z);void cca(int i);
-int lx=LX,ly=LY,h[4][10],ax,ay,t[4][10],i,j,sc[10],d[2][10],s[50][50],by;
-int ti=150,tp=ti,tr=ti,hs=0,cc[10]={170,170,170,170,170,170,170,170,170,170},cs=255,cf=15,cm=204,cb=15,b=0,z=1,mm;
+int lx=LX,ly=LY,h[4][10],ax,ay,t[4][10],i,j,sc[10],d[2][10],s[50][50],by,cb=15,b=0,z=1,mm,td=1,nm;
+int ti=150,tp=ti,tr=ti,hs=0,cc[10]={170,170,170,170,170,170,170,170,170,170},cs=255,cf=15,cm=204;
 bool p=true,m[10];char q[10][4];
 int main()
 {
@@ -42,7 +42,7 @@ int main()
         {gotoxy(0,0);p=true;color(12);cout<<"Wall";color(cf);cout<<" or not";}
     }
     //.....................................................................................................
-    INC:srand (time(NULL));tp=ti;
+    nm=z;INC:srand (time(NULL));tp=ti;
     for(i=0;i<ly+1;i++)for(j=0;j<lx+1;j++)s[j][i]=0;//initializam vectorul 2D cu 0
     for(i=0;i<lx+1;i++){s[i][0]=7;s[i][ly+1]=7;}//  initializam marginile
     for(i=0;i<ly+1;i++){s[0][i]=7;s[lx+1][i]=7;}
@@ -51,6 +51,9 @@ int main()
     {
         d[0][i]=0;sc[i]=0;d[1][i]=0;m[i]=false;//cc[i]=170;
         h[0][i]=lx/4+i*2;  h[1][i]=ly/4+i*2;t[0][i]=h[0][i];t[1][i]=h[1][i];
+    }
+    for(i=0;i<nm;i++)
+    {
         ret1:ax=rand()%(lx-3)+1;ay=rand()%(ly-3)+1;
         color(cm);gotoxy(ax,ay);if(s[ax][ay]!=0)goto ret1;
         cout<<'X';s[ax][ay]=5;color(cf);
@@ -121,7 +124,7 @@ int main()
             {
                 if(s[h[0][i]][h[1][i]]==5)
                 {
-                    sc[i]++;tp-=2;ret:ax=rand()%(lx-3)+1;ay=rand()%(ly-3)+1;
+                    sc[i]++;tp-=td;ret:ax=rand()%(lx-3)+1;ay=rand()%(ly-3)+1;
                     color(cm);gotoxy(ax,ay);if(s[ax][ay]!=0)goto ret;
                     cout<<'X';s[ax][ay]=5;color(cf);
                 }else
