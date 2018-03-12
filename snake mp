@@ -7,7 +7,7 @@ using namespace std;
 INPUT_RECORD InputRecord;DWORD Events;
 HANDLE hout =GetStdHandle(STD_OUTPUT_HANDLE);
 HANDLE hin =GetStdHandle(STD_INPUT_HANDLE);
-void gotoxy(int x,int y);void border(int lx,int ly);void color(int c);void etail(int i);
+void gotoxy(int x,int y);void border(int lx,int ly);void color(int c);
 int main()
 {
     int v=0,np=1,na=1,tr=200,ti=tr,t=tr,ve=1,lx=30,ly=30;
@@ -17,7 +17,7 @@ int main()
     SetConsoleWindowInfo(hout,TRUE,&DisplayArea);
     i1:system("CLS");color(15);gotoxy(0,v);cout<<"->";gotoxy(3,0);cout<<"Wall";
     if(w==true){gotoxy(12,0);color(12);cout<<"Yes";color(15);cout<<"/No";}else
-        {gotoxy(12,0);cout<<"Yes/";color(12);cout<<"No";}
+        {gotoxy(12,0);cout<<"Yes/";color(12);cout<<"No";color(15);}
     gotoxy(3,1);cout<<"Palyers";gotoxy(12,1);cout<<"- "<<np<<" +";
     gotoxy(3,2);cout<<"Apples";gotoxy(12,2);cout<<"- "<<na<<" +";
     gotoxy(3,3);cout<<"Speed";gotoxy(12,3);cout<<"- "<<tr-ti<<" +";
@@ -219,3 +219,4 @@ void border(int x,int y)
     }
     for(int i=0;i<x+2;i++)cout<<'-';
 }
+
