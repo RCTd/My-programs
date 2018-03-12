@@ -1,271 +1,221 @@
 #include <iostream>
 #include <ctime>
+#include <stdio.h>
 #include <windows.h>
-#define LX 40
-#define LY 40
+#include <vector>
 using namespace std;
 INPUT_RECORD InputRecord;DWORD Events;
 HANDLE hout =GetStdHandle(STD_OUTPUT_HANDLE);
 HANDLE hin =GetStdHandle(STD_INPUT_HANDLE);
-void gotoxy(int x,int y);void border(int lx,int ly);
-void color(int c);void tail(int i);void con(int z);void cca(int i);
-int lx=LX,ly=LY,h[4][10],ax,ay,t[4][10],i,j,sc[10],d[2][10],s[50][50],by,cb=15,b=0,z=1,mm,td=1,nm;
-int ti=150,tp=ti,tr=ti,hs=0,cc[10],cs=255,cf=15,cm=204,st;
-bool p=true,m[10];char q[10][4];
+void gotoxy(int x,int y);void border(int lx,int ly);void color(int c);void etail(int i);
 int main()
 {
+    int v=0,np=1,na=1,tr=200,ti=tr,t=tr,ve=1,lx=30,ly=30;
+    int p=0,i,j,ax,ay,nr,ca=204,cs=255,hscor=0,tsco,by;
+    bool w=true;
     SMALL_RECT DisplayArea= {0,0,lx+25,ly+3};
     SetConsoleWindowInfo(hout,TRUE,&DisplayArea);
-    for(i=0;i<10;i++)for(j=0;j<4;j++)q[i][j]='0';
-    INC1:system("CLS");
-    gotoxy(4,0);color(cf);cout<<" or not (use arrows and enter)";
-    gotoxy(0,1);cout<<"Players(1-4) ";color(12);cout<<z;gotoxy(0,0);
-    if(p==true){color(12);cout<<"Wall";}else
-    {
-        color(cf);cout<<"Wall or ";
-        color(12);cout<<"not";
-    }color(cf);gotoxy(0,2);cout<<"Speed ";cout<<tr-ti;
-    //...........................................................................................................
+    i1:system("CLS");color(15);gotoxy(0,v);cout<<"->";gotoxy(3,0);cout<<"Wall";
+    if(w==true){gotoxy(12,0);color(12);cout<<"Yes";color(15);cout<<"/No";}else
+        {gotoxy(12,0);cout<<"Yes/";color(12);cout<<"No";}
+    gotoxy(3,1);cout<<"Palyers";gotoxy(12,1);cout<<"- "<<np<<" +";
+    gotoxy(3,2);cout<<"Apples";gotoxy(12,2);cout<<"- "<<na<<" +";
+    gotoxy(3,3);cout<<"Speed";gotoxy(12,3);cout<<"- "<<tr-ti<<" +";
+    gotoxy(3,4);cout<<"Velocity";gotoxy(12,4);cout<<"- "<<ve<<" +";
+    gotoxy(3,5);cout<<"Options";Sleep(200);
     while(!GetAsyncKeyState(VK_RETURN))
     {
-        color(12);
-        if(GetAsyncKeyState(VK_SHIFT))for(int i=0;i<z;i++)cca(i);
-        if(GetAsyncKeyState(VK_UP)&&z<9){z++;gotoxy(15,1);gotoxy(13,1);cout<<z;Sleep(150);}
-        if(GetAsyncKeyState(VK_DOWN)&&z>1){z--;gotoxy(15,1);gotoxy(13,1);cout<<z;Sleep(150);}
-        if(GetAsyncKeyState(VK_ESCAPE))goto FIN1;
-        if(GetAsyncKeyState(VK_CONTROL)){con(z);goto INC1;}color(cf);
-        if(GetAsyncKeyState('W')){ti--;Sleep(50);gotoxy(6,2);cout<<"    ";gotoxy(6,2);cout<<tr-ti;}
-        if(GetAsyncKeyState('S')){ti++;Sleep(50);gotoxy(6,2);cout<<"    ";gotoxy(6,2);cout<<tr-ti;}
-        if(GetAsyncKeyState(VK_RIGHT)&&p==true)
-        {gotoxy(0,0);p=false;color(cf);cout<<"Wall or ";color(12);cout<<"not";}
-        if(GetAsyncKeyState(VK_LEFT)&&p==false)
-        {gotoxy(0,0);p=true;color(12);cout<<"Wall";color(cf);cout<<" or not";}
-    }
-    //.....................................................................................................
-    nm=z;INC:srand (time(NULL));tp=ti;
-    for(i=0;i<ly+1;i++)for(j=0;j<lx+1;j++)s[j][i]=0;//initializam vectorul 2D cu 0
-    for(i=0;i<lx+1;i++){s[i][0]=7;s[i][ly+1]=7;}//  initializam marginile
-    for(i=0;i<ly+1;i++){s[0][i]=7;s[lx+1][i]=7;}
-    system("CLS");border(lx,ly);mm=z;
-    for(i=0;i<z;i++)
-    {
-        d[0][i]=0;sc[i]=0;d[1][i]=0;m[i]=false;if(cc[i]==0)cc[i]=170;
-        h[0][i]=lx/4+i*2;  h[1][i]=ly/4+i*2;t[0][i]=h[0][i];t[1][i]=h[1][i];
-    }
-    for(i=0;i<nm;i++)
-    {
-        ret1:ax=rand()%(lx-3)+1;ay=rand()%(ly-3)+1;
-        color(cm);gotoxy(ax,ay);if(s[ax][ay]!=0)goto ret1;
-        cout<<'X';s[ax][ay]=5;color(cf);
-    }
-    gotoxy(lx+5,3);cout<<"High scor ";gotoxy(lx+5,4);cout<<"Scor ";
-    gotoxy(lx+5,5);cout<<"Speed ";
-    //......................................................................................................
-    while(mm>0)
-    {
-        for(i=0;i<z;i++)if(m[i]==false)
+        if(GetAsyncKeyState(VK_UP)&&v>0){gotoxy(0,v);cout<<"  ";v--;gotoxy(0,v);cout<<"->";Sleep(200);}
+        if(GetAsyncKeyState(VK_DOWN)&&v<5){gotoxy(0,v);cout<<"  ";v++;gotoxy(0,v);cout<<"->";Sleep(200);}
+        if(GetAsyncKeyState(VK_LEFT))
         {
-            h[2][i]=h[0][i];h[3][i]=h[1][i];
-            if(GetAsyncKeyState('1')){Sleep(200);while(!GetAsyncKeyState('1'))Sleep(300);}//Pause
-            if(GetAsyncKeyState(VK_ESCAPE)){Sleep(200);goto INC1;}//Meniu
+            if(v==0&&w==false){gotoxy(12,0);color(12);cout<<"Yes";color(15);cout<<"/No";w=true;Sleep(200);}else
+            if(v==1&&np>1){np--;gotoxy(14,1);cout<<"    ";gotoxy(14,1);cout<<np<<" +";Sleep(200);}else
+            if(v==2&&na>1){na--;gotoxy(14,2);cout<<"    ";gotoxy(14,2);cout<<na<<" +";Sleep(200);}else
+            if(v==3){ti++;Sleep(50);gotoxy(14,3);cout<<"      ";gotoxy(14,3);cout<<tr-ti<<" +";}else
+            if(v==4&&ve>1){ve--;gotoxy(14,4);cout<<"    ";gotoxy(14,4);cout<<ve<<" +";Sleep(200);}
+        }
+        if(GetAsyncKeyState(VK_RIGHT))
+        {
+            if(v==0&&w==true){gotoxy(12,0);color(15);cout<<"Yes/";color(12);cout<<"No";w=false;Sleep(200);}else
+            if(v==1&&np<15){np++;gotoxy(14,1);cout<<"    ";gotoxy(14,1);cout<<np<<" +";Sleep(200);}else
+            if(v==2){na++;gotoxy(14,2);cout<<"    ";gotoxy(14,2);cout<<na<<" +";Sleep(200);}else
+            if(v==3){ti--;Sleep(50);gotoxy(14,3);cout<<"      ";gotoxy(14,3);cout<<tr-ti<<" +";}else
+            if(v==4){ve++;gotoxy(14,4);cout<<"    ";gotoxy(14,4);cout<<ve<<" +";Sleep(200);}
+        }
+        color(15);
+    }Sleep(200);
+    vector<int> co(np,170);
+    vector<int>score(np);
+    vector<bool>al(np,false);
+    vector<vector<int> >head(4,vector<int>(np));
+    vector<vector<int> >tail(4,vector<int>(np));
+    vector<vector<int> >direct(2,vector<int>(np,0));
+    vector<vector<int> >board(lx+2,vector<int>(ly+2,0));
+    if(v==5)
+    {
+        i2:for(p=0;p<np+2;p++){gotoxy(3,6+p);cout<<"                ";}
+        gotoxy(0,5);cout<<"  ";gotoxy(3,6);cout<<"->";v=0;Sleep(200);
+        for(p=0;p<np;p++){gotoxy(6,6+p);cout<<"Player ";cout<<p+1;}
+        while(!GetAsyncKeyState(VK_RETURN))
+            {if(GetAsyncKeyState(VK_ESCAPE)){for(p=0;p<np+2;p++){gotoxy(3,6+p);cout<<"                ";}v=5;goto i1;}
+            if(GetAsyncKeyState(VK_UP)&&v>0){gotoxy(3,6+v);cout<<"  ";v--;gotoxy(3,6+v);cout<<"->";Sleep(200);}
+            if(GetAsyncKeyState(VK_DOWN)&&v<np-1){gotoxy(3,6+v);cout<<"  ";v++;gotoxy(3,6+v);cout<<"->";Sleep(200);}}Sleep(200);
+        for(p=0;p<np+2;p++){gotoxy(3,6+p);cout<<"            ";}
+        gotoxy(6,6);cout<<"Player "<<v+1;
+        gotoxy(8,7);cout<<"Color  -";color(co[v]);cout<<' ';color(15);cout<<" +";
+        while(!GetAsyncKeyState(VK_RETURN))
+            {if(GetAsyncKeyState(VK_ESCAPE))goto i2;
+            if(GetAsyncKeyState(VK_LEFT)){if(co[v]==17)co[v]=255;else co[v]-=17;gotoxy(16,7);color(co[v]);cout<<'0';Sleep(200);color(15);}
+            if(GetAsyncKeyState(VK_RIGHT)){if(co[v]==255)co[v]=17;else co[v]+=17;gotoxy(16,7);color(co[v]);cout<<'0';Sleep(200);color(15);}}Sleep(200);
+    }
+    srand(time(NULL));t=ti;
+    for(i=0;i<lx+1;i++){board[i][0]=7;board[i][ly+1]=7;}
+    for(i=0;i<ly+1;i++){board[0][i]=7;board[lx+1][i]=7;}
+    system("CLS");border(lx,ly);nr=np;
+    for(i=0;i<np;i++)
+    {
+        ha:head[0][i]=rand()%(lx-3)+1;head[1][i]=rand()%(ly-3)+1;
+        if(board[head[0][i]][head[1][i]]!=0)goto ha;
+        tail[0][i]=head[0][i];tail[1][i]=head[1][i];
+        gotoxy(head[0][i],head[1][i]);color(co[i]);cout<<'0';
+    }
+    for(i=0;i<na;i++)
+    {
+        aa:ax=rand()%(lx-3)+1;ay=rand()%(ly-3)+1;
+        if(board[ax][ay]!=0)goto aa;
+        gotoxy(ax,ay);color(ca);cout<<'X';
+        board[ax][ay]=5;
+    }
+    color(15);gotoxy(lx+5,3);cout<<"High scor ";gotoxy(lx+5,4);cout<<"Scor ";gotoxy(lx+5,5);cout<<"Speed ";
+    while(nr)
+    {
+        for(i=0;i<np;i++)if(al[i]==false)
+        {
+            head[2][i]=head[0][i];head[3][i]=head[1][i];
+            if(GetAsyncKeyState('1')){Sleep(200);while(!GetAsyncKeyState('1'))Sleep(300);}
+            if(GetAsyncKeyState(VK_ESCAPE)){Sleep(200);goto i1;}
             if(GetAsyncKeyState(VK_SPACE))Sleep(200);
-            //....................................................................................
             if(i==0)
             {
-                if(GetAsyncKeyState(38))d[1][i]=1;if(GetAsyncKeyState(40))d[1][i]=3;
-                if(GetAsyncKeyState(37))d[1][i]=4;if(GetAsyncKeyState(39))d[1][i]=2;
+                if(GetAsyncKeyState(38))direct[1][i]=1;if(GetAsyncKeyState(40))direct[1][i]=3;
+                if(GetAsyncKeyState(37))direct[1][i]=4;if(GetAsyncKeyState(39))direct[1][i]=2;
             }else
             if(i==1)
             {
-                if(GetAsyncKeyState('W'))  d[1][i]=1;if(GetAsyncKeyState('S'))  d[1][i]=3;
-                if(GetAsyncKeyState('A'))  d[1][i]=4;if(GetAsyncKeyState('D'))  d[1][i]=2;
+                if(GetAsyncKeyState('W'))  direct[1][i]=1;if(GetAsyncKeyState('S'))  direct[1][i]=3;
+                if(GetAsyncKeyState('A'))  direct[1][i]=4;if(GetAsyncKeyState('D'))  direct[1][i]=2;
             }else
             if(i==2)
             {
-                if(GetAsyncKeyState('T'))  d[1][i]=1;if(GetAsyncKeyState('G'))  d[1][i]=3;
-                if(GetAsyncKeyState('F'))  d[1][i]=4;if(GetAsyncKeyState('H'))  d[1][i]=2;
+                if(GetAsyncKeyState('T'))  direct[1][i]=1;if(GetAsyncKeyState('G'))  direct[1][i]=3;
+                if(GetAsyncKeyState('F'))  direct[1][i]=4;if(GetAsyncKeyState('H'))  direct[1][i]=2;
             }else
             if(i==3)
             {
-                if(GetAsyncKeyState('I'))  d[1][i]=1;if(GetAsyncKeyState('K'))  d[1][i]=3;
-                if(GetAsyncKeyState('J'))  d[1][i]=4;if(GetAsyncKeyState('L'))  d[1][i]=2;
+                if(GetAsyncKeyState('I'))  direct[1][i]=1;if(GetAsyncKeyState('K'))  direct[1][i]=3;
+                if(GetAsyncKeyState('J'))  direct[1][i]=4;if(GetAsyncKeyState('L'))  direct[1][i]=2;
             }else
             if(i==4)
             {
-                if(GetAsyncKeyState('2'))  d[1][i]=1;if(GetAsyncKeyState('W'))  d[1][i]=3;
-                if(GetAsyncKeyState('Q'))  d[1][i]=4;if(GetAsyncKeyState('E'))  d[1][i]=2;
+                if(GetAsyncKeyState('2'))  direct[1][i]=1;if(GetAsyncKeyState('W'))  direct[1][i]=3;
+                if(GetAsyncKeyState('Q'))  direct[1][i]=4;if(GetAsyncKeyState('E'))  direct[1][i]=2;
             }else
             if(i==5)
             {
-                if(GetAsyncKeyState('8'))  d[1][i]=1;if(GetAsyncKeyState('I'))  d[1][i]=3;
-                if(GetAsyncKeyState('U'))  d[1][i]=4;if(GetAsyncKeyState('O'))  d[1][i]=2;
+                if(GetAsyncKeyState('8'))  direct[1][i]=1;if(GetAsyncKeyState('I'))  direct[1][i]=3;
+                if(GetAsyncKeyState('U'))  direct[1][i]=4;if(GetAsyncKeyState('O'))  direct[1][i]=2;
             }else
             if(i==6)
             {
-                if(GetAsyncKeyState('K'))  d[1][i]=1;if(GetAsyncKeyState(0xBC))  d[1][i]=3;
-                if(GetAsyncKeyState('M'))  d[1][i]=4;if(GetAsyncKeyState(0xBE))  d[1][i]=2;
+                if(GetAsyncKeyState('K'))  direct[1][i]=1;if(GetAsyncKeyState(0xBC))  direct[1][i]=3;
+                if(GetAsyncKeyState('M'))  direct[1][i]=4;if(GetAsyncKeyState(0xBE))  direct[1][i]=2;
             }
-            //...............................................................................................
-            if((d[1][i]!=d[0][i])&&((((d[1][i]%2==0&&d[0][i]%2!=0)||(d[1][i]%2!=0&&d[0][i]%2==0)))||(sc[i]==0)))d[0][i]=d[1][i];
-            s[h[0][i]][h[1][i]]=d[0][i];
-            switch(d[0][i])
+            if((direct[1][i]!=direct[0][i])&&((((direct[1][i]%2==0&&direct[0][i]%2!=0)||(direct[1][i]%2!=0&&direct[0][i]%2==0)))||(score[i]==0)))direct[0][i]=direct[1][i];
+            board[head[0][i]][head[1][i]]=direct[0][i];
+            switch(direct[0][i])
             {
-            case 1:h[1][i]--;break;case 2:h[0][i]++;break;
-            case 3:h[1][i]++;break;case 4:h[0][i]--;break;
+            case 1:head[1][i]--;break;case 2:head[0][i]++;break;
+            case 3:head[1][i]++;break;case 4:head[0][i]--;break;
             }//Noua pozitie a capului
-            if(p==false)
+            if(w==false)
             {
-                if(h[0][i]==lx+1)h[0][i]=1;if(h[1][i]==ly+1)h[1][i]=1;
-                if(h[0][i]==0)h[0][i]=lx;if(h[1][i]==0)h[1][i]=ly;
+                if(head[0][i]==lx+1)head[0][i]=1;if(head[1][i]==ly+1)head[1][i]=1;
+                if(head[0][i]==0)head[0][i]=lx;if(head[1][i]==0)head[1][i]=ly;
             }
-            for(j=0;j<z;j++)if(j!=i&&m[j]==false)s[h[0][j]][h[1][j]]=8+j;
-            //.............................................................................................................
-            if(s[h[0][i]][h[1][i]]!=0)
+            for(j=0;j<np;j++)if(j!=i&&al[j]==false)board[head[0][j]][head[1][j]]=8+j;
+            if(board[head[0][i]][head[1][i]]!=0)
             {
-                if(s[h[0][i]][h[1][i]]==5)
+                if(board[head[0][i]][head[1][i]]==5)
                 {
-                    sc[i]++;tp-=td;ret:ax=rand()%(lx-3)+1;ay=rand()%(ly-3)+1;
-                    color(cm);gotoxy(ax,ay);if(s[ax][ay]!=0)goto ret;
-                    cout<<'X';s[ax][ay]=5;color(cf);
+                    score[i]++;t-=ve;ret:ax=rand()%(lx-3)+1;ay=rand()%(ly-3)+1;
+                    color(ca);gotoxy(ax,ay);if(board[ax][ay]!=0)goto ret;
+                    cout<<'X';board[ax][ay]=5;color(15);
                 }else
-                if(h[0][i]==t[0][i]&&h[1][i]==t[1][i])
-                    tail(i);
+                if(head[0][i]==tail[0][i]&&head[1][i]==tail[1][i])
+                    {
+    color(15);tail[2][i]=tail[0][i];tail[3][i]=tail[1][i];gotoxy(tail[0][i],tail[1][i]);cout<<' ';
+    if(board[tail[0][i]][tail[1][i]]==1)tail[1][i]--;else if(board[tail[0][i]][tail[1][i]]==2)tail[0][i]++;else
+    if(board[tail[0][i]][tail[1][i]]==3)tail[1][i]++;else if(board[tail[0][i]][tail[1][i]]==4)tail[0][i]--;
+    if(w==false)
+        {if(tail[0][i]==lx+1)tail[0][i]=1;if(tail[1][i]==ly+1)tail[1][i]=1;
+        if(tail[0][i]==0)tail[0][i]=lx;if(tail[1][i]==0)tail[1][i]=ly;}
+    board[tail[2][i]][tail[3][i]]=0;
+}
                 else{
-                    m[i]=true;mm--;for(j=0;j<=sc[i];j++)tail(i);if(s[h[0][i]][h[1][i]]>=8)
-                    {by=s[h[0][i]][h[1][i]]-8;m[by]=true;mm--;for(j=0;j<=sc[by];j++)tail(by);}
+                                        al[i]=true;nr--;for(j=0;j<=score[i];j++){
+                        color(15);tail[2][i]=tail[0][i];tail[3][i]=tail[1][i];gotoxy(tail[0][i],tail[1][i]);cout<<' ';
+                        if(board[tail[0][i]][tail[1][i]]==1)tail[1][i]--;else if(board[tail[0][i]][tail[1][i]]==2)tail[0][i]++;else
+                        if(board[tail[0][i]][tail[1][i]]==3)tail[1][i]++;else if(board[tail[0][i]][tail[1][i]]==4)tail[0][i]--;
+                        if(w==false)
+                            {if(tail[0][i]==lx+1)tail[0][i]=1;if(tail[1][i]==ly+1)tail[1][i]=1;
+                            if(tail[0][i]==0)tail[0][i]=lx;if(tail[1][i]==0)tail[1][i]=ly;}
+                        board[tail[2][i]][tail[3][i]]=0;
+                    }if(board[head[0][i]][head[1][i]]>=8)
+                    {by=board[head[0][i]][head[1][i]]-8;al[by]=true;nr--;for(j=0;j<=score[by];j++)
+                    {
+                    color(15);tail[2][by]=tail[0][by];tail[3][i]=tail[1][by];gotoxy(tail[0][by],tail[1][by]);cout<<' ';
+                    if(board[tail[0][by]][tail[1][by]]==1)tail[1][by]--;else if(board[tail[0][by]][tail[1][by]]==2)tail[0][i]++;else
+                    if(board[tail[0][by]][tail[1][by]]==3)tail[1][by]++;else if(board[tail[0][by]][tail[1][by]]==4)tail[0][i]--;
+                    if(w==false)
+                        {if(tail[0][by]==lx+1)tail[0][by]=1;if(tail[1][by]==ly+1)tail[1][by]=1;
+                        if(tail[0][by]==0)tail[0][by]=lx;if(tail[1][by]==0)tail[1][by]=ly;}
+                    board[tail[2][by]][tail[3][by]]=0;
+                }}
                 }
+            }else {
+                color(15);tail[2][i]=tail[0][i];tail[3][i]=tail[1][i];gotoxy(tail[0][i],tail[1][i]);cout<<' ';
+                if(board[tail[0][i]][tail[1][i]]==1)tail[1][i]--;else if(board[tail[0][i]][tail[1][i]]==2)tail[0][i]++;else
+                if(board[tail[0][i]][tail[1][i]]==3)tail[1][i]++;else if(board[tail[0][i]][tail[1][i]]==4)tail[0][i]--;
+                if(w==false)
+                    {if(tail[0][i]==lx+1)tail[0][i]=1;if(tail[1][i]==ly+1)tail[1][i]=1;
+                    if(tail[0][i]==0)tail[0][i]=lx;if(tail[1][i]==0)tail[1][i]=ly;}
+                board[tail[2][i]][tail[3][i]]=0;
             }
-            else tail(i);
-            if(m[i]==false)
+            if(al[i]==false)
             {
-                if(sc[i]>0){color(cs);gotoxy(h[2][i],h[3][i]);cout<<'0';}
-                color(cc[i]);gotoxy(h[0][i],h[1][i]);cout<<'0';//CAPUL
+                if(score[i]>0){color(cs);gotoxy(head[2][i],head[3][i]);cout<<'0';}
+                color(co[i]);gotoxy(head[0][i],head[1][i]);cout<<'0';//CAPUL
             }
-            st=0;for(j=0;j<z;j++)st+=sc[j];
-            color(cf);gotoxy(lx+15,3);cout<<hs;gotoxy(lx+10,4);cout<<st;
-            gotoxy(lx+12,5);cout<<"   ";gotoxy(lx+12,5);cout<<ti-tp;
-        }
-        if(tp>0)Sleep(tp);
-    }
-    //...................................................................................................................
-    if(sc[0]+sc[1]>hs)hs=sc[0]+sc[1];goto INC;FIN1:return 0;
+            tsco=0;for(j=0;j<np;j++)tsco+=score[j];
+            color(15);gotoxy(lx+15,3);cout<<hscor;gotoxy(lx+10,4);cout<<tsco;
+            gotoxy(lx+12,5);cout<<"   ";gotoxy(lx+12,5);cout<<ti-t;
+        }if(t>0)Sleep(t);
+    }tsco=0;for(j=0;j<np;j++)tsco+=score[j];
+    if(tsco>hscor)hscor=tsco;goto i1;return 0;
 }
 void color(int c){SetConsoleTextAttribute(hout,c);}
 void gotoxy(int x,int y)
+    {COORD coord;coord.X=x;coord.Y=y;
+    SetConsoleCursorPosition(hout,coord);}
+void border(int x,int y)
 {
-    COORD coord;coord.X=x;coord.Y=y;
-    SetConsoleCursorPosition(hout,coord);
-}//........................................................................................................................................
-void border(int lx,int ly)
-{
-    color(cb);gotoxy(0,0);for(i=0;i<lx+2;i++)cout<<'-';cout<<'\n';
-    for(i=0;i<ly;i++)
+    color(15);gotoxy(0,0);for(int i=0;i<x+2;i++)cout<<'-';cout<<'\n';
+    for(int i=0;i<y;i++)
     {
         cout<<'|';
-        for(j=0;j<lx;j++)cout<<' ';
+        for(int j=0;j<x;j++)cout<<' ';
         cout<<"|\n";
     }
-    for(i=0;i<lx+2;i++)cout<<'-';
-}//........................................................................................................................................
-void tail(int i)
-{
-    color(cf);t[2][i]=t[0][i];t[3][i]=t[1][i];gotoxy(t[0][i],t[1][i]);cout<<' ';
-    if(s[t[0][i]][t[1][i]]==1)t[1][i]--;else if(s[t[0][i]][t[1][i]]==2)t[0][i]++;else
-    if(s[t[0][i]][t[1][i]]==3)t[1][i]++;else if(s[t[0][i]][t[1][i]]==4)t[0][i]--;
-    if(p==false)
-    {
-        if(t[0][i]==lx+1)t[0][i]=1;if(t[1][i]==ly+1)t[1][i]=1;
-        if(t[0][i]==0)t[0][i]=lx;if(t[1][i]==0)t[1][i]=ly;
-    }
-    s[t[2][i]][t[3][i]]=0;
-}//........................................................................................................................................
-void con(int z)
-{
-    gotoxy(0,3);color(cf);b=0;
-    for(i=0;i<z;i++)
-    {
-        if(i==b)color(12);else color(cf);
-        cout<<"Player "<<i<<"\n";
-    }while(!GetAsyncKeyState(VK_RETURN))
-    {
-        gotoxy(0,3+b);color(cf);Sleep(200);cout<<"Player "<<b;
-        if(GetAsyncKeyState(VK_UP)&&b>0)b--;
-        if(GetAsyncKeyState(VK_DOWN)&&b<z-1)b++;
-        color(12);gotoxy(0,3+b);cout<<"Player "<<b;
-    }Sleep(200);color(cf);
-    gotoxy(0,3);cout<<"Player "<<b<<'\n';color(12);
-    cout<<" UP......"<<q[i][0]<<"\n";color(cf);
-    cout<<" Down...."<<q[i][1]<<"\n";
-    cout<<" Left...."<<q[i][2]<<"\n";
-    cout<<" Right..."<<q[i][3]<<"\n";b=0;
-    for(i=0;i<4;i++)cout<<"           \n";
-    while(!GetAsyncKeyState(VK_RETURN))
-    {
-        if(GetAsyncKeyState(VK_UP)&&b>0)
-        {
-            if(b==1)
-            {
-                gotoxy(0,4);color(12);
-                cout<<" UP......"<<q[i][0]<<"\n";color(cf);
-                cout<<" Down...."<<q[i][1]<<"\n";
-                cout<<" Left...."<<q[i][2]<<"\n";
-                cout<<" Right..."<<q[i][3];
-            }else
-            if(b==2)
-            {
-                gotoxy(0,4);
-                cout<<" UP......"<<q[i][0]<<"\n";
-                color(12);cout<<" Down...."<<q[i][1]<<"\n";
-                color(cf);cout<<" Left...."<<q[i][2]<<"\n";
-                cout<<" Right..."<<q[i][3];
-            }else
-            {
-                gotoxy(0,4);
-                cout<<" UP......"<<q[i][0]<<"\n";
-                cout<<" Down...."<<q[i][1]<<"\n";
-                color(12);cout<<" Left...."<<q[i][2]<<"\n";
-                color(cf);cout<<" Right..."<<q[i][3];
-            }b--;Sleep(200);
-        }
-        if(GetAsyncKeyState(VK_DOWN)&&b<4)
-        {
-            if(b==0)
-            {
-                gotoxy(0,4);
-                cout<<" UP......"<<q[i][0]<<"\n";
-                color(12);cout<<" Down...."<<q[i][1]<<"\n";
-                color(cf);cout<<" Left...."<<q[i][2]<<"\n";
-                cout<<" Right..."<<q[i][3];
-            }else
-            if(b==1)
-            {
-                gotoxy(0,4);
-                cout<<" UP......"<<q[i][0]<<"\n";
-                cout<<" Down...."<<q[i][1]<<"\n";
-                color(12);cout<<" Left...."<<q[i][2]<<"\n";
-                color(cf);cout<<" Right..."<<q[i][3];
-            }else
-            {
-                gotoxy(0,4);
-                cout<<" UP......"<<q[i][0]<<"\n";
-                cout<<" Down...."<<q[i][1]<<"\n";
-                cout<<" Left...."<<q[i][2]<<"\n";
-                color(12);cout<<" Right..."<<q[i][3];color(cf);
-            }b++;Sleep(200);
-        }
-    }
-    Sleep(200);
-}
-void cca(int i)
-{
-    color(cf);system("CLS");b=1;cout<<"Player "<<i<<'\n';
-    for(j=17;j<=270;j+=17){color(cf);cout<<"  ";color(j);cout<<" \n";}Sleep(100);
-    gotoxy(0,1);color(cf);cout<<"->";
-    while(!GetAsyncKeyState(VK_RETURN))
-    {
-        if(GetAsyncKeyState(VK_ESCAPE)){Sleep(200);goto CUL;}
-        if(GetAsyncKeyState(VK_UP)&&b>1){gotoxy(0,b);cout<<"  ";b--;gotoxy(0,b);cout<<"->";Sleep(100);}
-        if(GetAsyncKeyState(VK_DOWN)&&b<15){gotoxy(0,b);cout<<"  ";b++;gotoxy(0,b);cout<<"->";Sleep(100);}
-    }
-    cc[i]=b*17;CUL:color(cf);
+    for(int i=0;i<x+2;i++)cout<<'-';
 }
