@@ -21,21 +21,18 @@ vector<vector<int> >board(lx+2,vector<int>(ly+2));
 int main()
 {
     q[0][0]=38;q[0][1]=40;q[0][2]=37;q[0][3]=39;
-    q[1][0]='S';q[1][1]='A';q[1][2]='Q';q[1][3]='Y';
+    q[1][0]='W';q[1][1]='S';q[1][2]='A';q[1][3]='D';
     q[2][0]='D';q[2][1]='C';q[2][2]='X';q[2][3]='V';
     q[3][0]='4';q[3][1]='R';q[3][2]='E';q[3][3]='T';
     q[4][0]='H';q[4][1]='N';q[4][2]='B';q[4][3]='M';
     q[5][0]='I';q[5][1]='K';q[5][2]='J';q[5][3]='L';
-    CONSOLE_CURSOR_INFO ConCurInf;
-    ConCurInf.dwSize = 10;
-    ConCurInf.bVisible = false;
-    SetConsoleCursorInfo(hout, &ConCurInf);
-    SMALL_RECT DisplayArea= {0,0,lx+25,ly+3};
+    CONSOLE_CURSOR_INFO ConCurInf;ConCurInf.dwSize = 10;ConCurInf.bVisible = false;
+    SetConsoleCursorInfo(hout, &ConCurInf);SMALL_RECT DisplayArea= {0,0,lx+25,ly+3};
     SetConsoleWindowInfo(hout,TRUE,&DisplayArea);
     i1:system("CLS");color(15);gotoxy(0,v);cout<<"->";gotoxy(3,0);cout<<"Wall";
     if(w==true){gotoxy(12,0);color(12);cout<<"Yes";color(15);cout<<"/No";}else
         {gotoxy(12,0);cout<<"Yes/";color(12);cout<<"No";color(15);}
-    gotoxy(3,1);cout<<"Palyers";gotoxy(12,1);cout<<"- "<<np<<" +";
+    gotoxy(3,1);cout<<"Players";gotoxy(12,1);cout<<"- "<<np<<" +";
     gotoxy(3,2);cout<<"Apples";gotoxy(12,2);cout<<"- "<<na<<" +";
     gotoxy(3,3);cout<<"Speed";gotoxy(12,3);cout<<"- "<<tr-ti<<" +";
     gotoxy(3,4);cout<<"Velocity";gotoxy(12,4);cout<<"- "<<ve<<" +";
@@ -58,7 +55,7 @@ int main()
             if(v==1&&np<15){head.push_back(add);tail.push_back(add);direct.push_back(add);co.push_back(170);score.push_back(0);
                 al.push_back(false);np++;gotoxy(14,1);cout<<"    ";gotoxy(14,1);cout<<np<<" +";Sleep(200);}else
             if(v==2){na++;gotoxy(14,2);cout<<"    ";gotoxy(14,2);cout<<na<<" +";Sleep(200);}else
-            if(v==3){ti--;Sleep(50);gotoxy(14,3);cout<<"      ";gotoxy(14,3);cout<<tr-ti<<" +";}else
+            if(v==3&&ti>0){ti--;Sleep(50);gotoxy(14,3);cout<<"      ";gotoxy(14,3);cout<<tr-ti<<" +";}else
             if(v==4){ve++;gotoxy(14,4);cout<<"    ";gotoxy(14,4);cout<<ve<<" +";Sleep(200);}
         }
         color(15);
@@ -115,7 +112,7 @@ int main()
         board[ax][ay]=5;
     }
     color(15);gotoxy(lx+4,3);cout<<"THigh scor";gotoxy(lx+4,4);cout<<"TScor ";gotoxy(lx+4,5);cout<<"Speed ";
-    if(np!=1)for(i=1;i<=np;i++){gotoxy(lx+4,7+i);cout<<"Score "<<i;color(co[i]);cout<<' ';color(15);cout<<':';}
+    if(np!=1)for(i=1;i<=np;i++){gotoxy(lx+4,7+i);cout<<"Score "<<i;color(co[i-1]);cout<<' ';color(15);cout<<':';}
     while(nr)
     {
         for(i=0;i<np;i++)if(al[i]==false)
@@ -124,12 +121,16 @@ int main()
             if(GetAsyncKeyState('1')){Sleep(200);while(!GetAsyncKeyState('1'))Sleep(200);}
             if(GetAsyncKeyState(VK_ESCAPE)){Sleep(200);goto i1;}
             if(GetAsyncKeyState(VK_SPACE))Sleep(200);
+
             if(GetAsyncKeyState(q[i][0]))direct[1][i]=1;if(GetAsyncKeyState(q[i][1]))direct[1][i]=3;
             if(GetAsyncKeyState(q[i][2]))direct[1][i]=4;if(GetAsyncKeyState(q[i][3]))direct[1][i]=2;
+
             if((direct[1][i]!=direct[0][i])&&((((direct[1][i]%2==0&&direct[0][i]%2!=0)||(direct[1][i]%2!=0&&direct[0][i]%2==0)))||(score[i]==0)))direct[0][i]=direct[1][i];
             board[head[0][i]][head[1][i]]=direct[0][i];
+
             switch(direct[0][i]){case 1:head[1][i]--;break;case 2:head[0][i]++;break;case 3:head[1][i]++;break;case 4:head[0][i]--;break;}
             if(w==false){if(head[0][i]==lx+1)head[0][i]=1;if(head[1][i]==ly+1)head[1][i]=1;if(head[0][i]==0)head[0][i]=lx;if(head[1][i]==0)head[1][i]=ly;}
+
             for(j=0;j<np;j++)if(j!=i&&al[j]==false)board[head[0][j]][head[1][j]]=8+j;
             if(board[head[0][i]][head[1][i]]!=0)
             {
