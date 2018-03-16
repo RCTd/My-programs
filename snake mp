@@ -8,15 +8,16 @@ INPUT_RECORD InputRecord;DWORD Events;
 HANDLE hout =GetStdHandle(STD_OUTPUT_HANDLE);
 HANDLE hin =GetStdHandle(STD_INPUT_HANDLE);
 void gotoxy(int x,int y);void border(int lx,int ly);void color(int c);void etail(int e);
-int v=0,np=1,na=1,tr=200,ti=tr,t=tr,ve=1,lx=30,ly=30;
-int p=0,i,j,ax,ay,nr,ca=204,cs=255,hscor=0,tsco,by,f,c=0;
+int v=0,np=1,na=1,tr=150,ti=tr,t=tr,ve=1,lx=30,ly=30;
+int p=0,i,j,nr,ax,ay,ca=204,cs=255,hscor=0,tsco,by,f,c=0;
 bool w=true;
-vector<vector<char> >q(8,vector<char>(4,'0'));
-vector<int> co(8,170);vector<int>score(8,0);
-vector<bool>al(8,false);vector <int> add;
-vector<vector<int> >head(4,vector<int>(8));
-vector<vector<int> >tail(4,vector<int>(8));
-vector<vector<int> >direct(2,vector<int>(8));
+vector<int>ai(30,0);
+vector<vector<char> >q(30,vector<char>(4,'0'));
+vector<int> co(30,170);vector<int>score(8,0);
+vector<bool>al(30,false);vector <int> add;
+vector<vector<int> >head(4,vector<int>(30));
+vector<vector<int> >tail(4,vector<int>(30));
+vector<vector<int> >direct(2,vector<int>(30));
 vector<vector<int> >board(lx+2,vector<int>(ly+2));
 int main()
 {
@@ -93,6 +94,7 @@ int main()
     }
     i3:srand(time(NULL));t=ti;
     for(i=0;i<ly+1;i++)for(j=0;j<lx+1;j++)board[j][i]=0;
+    if(w==true)
     for(i=0;i<lx+1;i++){board[i][0]=7;board[i][ly+1]=7;}
     for(i=0;i<ly+1;i++){board[0][i]=7;board[lx+1][i]=7;}
     system("CLS");border(lx,ly);nr=np;
@@ -121,11 +123,22 @@ int main()
             if(GetAsyncKeyState('1')){Sleep(200);while(!GetAsyncKeyState('1'))Sleep(200);}
             if(GetAsyncKeyState(VK_ESCAPE)){Sleep(200);goto i1;}
             if(GetAsyncKeyState(VK_SPACE))Sleep(200);
+            if(ai[i]!=0)
+            {
 
+                if(head[0][i]<ax&&direct[0][i]!=4&&(board[head[0][i]+1][head[1][i]]==0||board[head[0][i]+1][head[1][i]]==5))direct[1][i]=2;else
+                if(head[0][i]>ax&&direct[0][i]!=2&&(board[head[0][i]-1][head[1][i]]==0||board[head[0][i]-1][head[1][i]]==5))direct[1][i]=4;else
+                if(head[1][i]<ay&&direct[0][i]!=1&&(board[head[0][i]][head[1][i]+1]==0||board[head[0][i]][head[1][i]+1]==5))direct[1][i]=3;else
+                if(head[1][i]>ay&&direct[0][i]!=3&&(board[head[0][i]][head[1][i]-1]==0||board[head[0][i]+1][head[1][i]]==5))direct[1][i]=1;else
+                if(board[head[0][i]+1][head[1][i]]==0||board[head[0][i]+1][head[1][i]]==5)direct[1][i]=2;else
+                if(board[head[0][i]-1][head[1][i]]==0||board[head[0][i]-1][head[1][i]]==5)direct[1][i]=4;else
+                if(board[head[0][i]][head[1][i]+1]==0||board[head[0][i]][head[1][i]+1]==5)direct[1][i]=3;else
+                if(board[head[0][i]][head[1][i]-1]==0||board[head[0][i]+1][head[1][i]]==5)direct[1][i]=1;
+            }
             if(GetAsyncKeyState(q[i][0]))direct[1][i]=1;if(GetAsyncKeyState(q[i][1]))direct[1][i]=3;
             if(GetAsyncKeyState(q[i][2]))direct[1][i]=4;if(GetAsyncKeyState(q[i][3]))direct[1][i]=2;
-
-            if((direct[1][i]!=direct[0][i])&&((((direct[1][i]%2==0&&direct[0][i]%2!=0)||(direct[1][i]%2!=0&&direct[0][i]%2==0)))||(score[i]==0)))direct[0][i]=direct[1][i];
+            if((direct[1][i]!=direct[0][i])&&((((direct[1][i]%2==0&&direct[0][i]%2!=0)||(direct[1][i]%2!=0&&direct[0][i]%2==0)))||(score[i]==0)))
+                direct[0][i]=direct[1][i];
             board[head[0][i]][head[1][i]]=direct[0][i];
 
             switch(direct[0][i]){case 1:head[1][i]--;break;case 2:head[0][i]++;break;case 3:head[1][i]++;break;case 4:head[0][i]--;break;}
