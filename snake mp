@@ -76,7 +76,7 @@ int main()
                 {if(co[v]==17)co[v]=255;else co[v]-=17;gotoxy(17,6+v);color(co[v]);cout<<'0';Sleep(200);color(15);}
             if(GetAsyncKeyState(VK_RIGHT))
                 {if(co[v]==255)co[v]=17;else co[v]+=17;gotoxy(17,6+v);color(co[v]);cout<<'0';Sleep(200);color(15);}
-            }Sleep(200);
+            }/*Sleep(200);
         for(p=0;p<np+2;p++){gotoxy(3,6+p);cout<<"                   ";}
         gotoxy(6,6);cout<<"Player "<<v+1;f=0;
         gotoxy(5,7);cout<<"-> Color  - ";color(co[v]);cout<<' ';color(15);cout<<" +";
@@ -92,7 +92,7 @@ int main()
                 {if(co[v]==17)co[v]=255;else co[v]-=17;gotoxy(17,7);color(co[v]);cout<<'0';Sleep(200);color(15);}
             if(GetAsyncKeyState(VK_RIGHT))
                 {if(co[v]==255)co[v]=17;else co[v]+=17;gotoxy(17,7);color(co[v]);cout<<'0';Sleep(200);color(15);}
-            }Sleep(200);
+            }Sleep(200);*/
     }
     i3:srand(time(NULL));t=ti;
     for(i=0;i<ly+1;i++)for(j=0;j<lx+1;j++)board[j][i]=0;
