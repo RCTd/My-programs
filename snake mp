@@ -11,21 +11,21 @@ void gotoxy(int x,int y);void border(int lx,int ly);void color(int c);void etail
 int v=0,np=1,na=1,tr=200,ti=tr,t=tr,ve=1,lx=30,ly=30;
 int p=0,i,j,ax,ay,nr,ca=204,cs=255,hscor=0,tsco,by,f,c=0;
 bool w=true;
-vector<vector<char> >q(7,vector<char>(4,'0'));
-vector<int> co(np,170);vector<int>score(np,0);
-vector<bool>al(np,false);vector <int> add;
-vector<vector<int> >head(4,vector<int>(np));
-vector<vector<int> >tail(4,vector<int>(np));
-vector<vector<int> >direct(2,vector<int>(np));
+vector<vector<char> >q(8,vector<char>(4,'0'));
+vector<int> co(8,170);vector<int>score(8,0);
+vector<bool>al(8,false);vector <int> add;
+vector<vector<int> >head(4,vector<int>(8));
+vector<vector<int> >tail(4,vector<int>(8));
+vector<vector<int> >direct(2,vector<int>(8));
 vector<vector<int> >board(lx+2,vector<int>(ly+2));
 int main()
 {
     q[0][0]=38;q[0][1]=40;q[0][2]=37;q[0][3]=39;
-    q[1][0]='W';q[1][1]='S';q[1][2]='A';q[1][3]='D';
-    q[2][0]='T';q[2][1]='G';q[2][2]='F';q[2][3]='H';
-    q[3][0]='I';q[3][1]='K';q[3][2]='J';q[3][3]='L';
-    //q[4][0]='';q[4][1]='';q[4][2]='';q[4][3]='';
-    //q[5][0]='';q[5][1]='';q[5][2]='';q[5][3]='';
+    q[1][0]='S';q[1][1]='A';q[1][2]='Q';q[1][3]='Y';
+    q[2][0]='D';q[2][1]='C';q[2][2]='X';q[2][3]='V';
+    q[3][0]='4';q[3][1]='R';q[3][2]='E';q[3][3]='T';
+    q[4][0]='H';q[4][1]='N';q[4][2]='B';q[4][3]='M';
+    q[5][0]='I';q[5][1]='K';q[5][2]='J';q[5][3]='L';
     CONSOLE_CURSOR_INFO ConCurInf;
     ConCurInf.dwSize = 10;
     ConCurInf.bVisible = false;
@@ -65,14 +65,19 @@ int main()
     }Sleep(200);
     if(v==5)
     {
-        v=0;i2:for(p=0;p<np+6;p++){gotoxy(3,6+p);cout<<"                  ";}
+        v=0;i2:for(p=0;p<np+6;p++){gotoxy(3,6+p);cout<<"                       ";}
         gotoxy(0,5);cout<<"  ";gotoxy(3,6+v);cout<<"->";Sleep(200);
-        for(p=0;p<np;p++){gotoxy(6,6+p);cout<<"Player ";cout<<p+1;}
+        for(p=0;p<np;p++){gotoxy(6,6+p);cout<<"Player "<<p+1;gotoxy(15,6+p);cout<<"- ";color(co[p]);cout<<' ';color(15);cout<<" +";}
         while(!GetAsyncKeyState(VK_RETURN))
             {if(GetAsyncKeyState(VK_ESCAPE)){for(p=0;p<np+2;p++){gotoxy(3,6+p);cout<<"                ";}v=5;goto i1;}
             if(GetAsyncKeyState(VK_UP)&&v>0){gotoxy(3,6+v);cout<<"  ";v--;gotoxy(3,6+v);cout<<"->";Sleep(200);}
-            if(GetAsyncKeyState(VK_DOWN)&&v<np-1){gotoxy(3,6+v);cout<<"  ";v++;gotoxy(3,6+v);cout<<"->";Sleep(200);}}Sleep(200);
-        for(p=0;p<np+2;p++){gotoxy(3,6+p);cout<<"              ";}
+            if(GetAsyncKeyState(VK_DOWN)&&v<np-1){gotoxy(3,6+v);cout<<"  ";v++;gotoxy(3,6+v);cout<<"->";Sleep(200);}
+            if(GetAsyncKeyState(VK_LEFT))
+                {if(co[v]==17)co[v]=255;else co[v]-=17;gotoxy(17,6+v);color(co[v]);cout<<'0';Sleep(200);color(15);}
+            if(GetAsyncKeyState(VK_RIGHT))
+                {if(co[v]==255)co[v]=17;else co[v]+=17;gotoxy(17,6+v);color(co[v]);cout<<'0';Sleep(200);color(15);}
+            }Sleep(200);
+        for(p=0;p<np+2;p++){gotoxy(3,6+p);cout<<"                   ";}
         gotoxy(6,6);cout<<"Player "<<v+1;f=0;
         gotoxy(5,7);cout<<"-> Color  - ";color(co[v]);cout<<' ';color(15);cout<<" +";
         gotoxy(8,8); cout<<"UP....."<<q[v][0];
@@ -110,7 +115,7 @@ int main()
         board[ax][ay]=5;
     }
     color(15);gotoxy(lx+4,3);cout<<"THigh scor";gotoxy(lx+4,4);cout<<"TScor ";gotoxy(lx+4,5);cout<<"Speed ";
-    if(np!=1)for(i=1;i<=np;i++){gotoxy(lx+4,7+i);cout<<"Score "<<i<<':';}
+    if(np!=1)for(i=1;i<=np;i++){gotoxy(lx+4,7+i);cout<<"Score "<<i;color(co[i]);cout<<' ';color(15);cout<<':';}
     while(nr)
     {
         for(i=0;i<np;i++)if(al[i]==false)
@@ -136,18 +141,10 @@ int main()
                 }else
                 if(head[0][i]==tail[0][i]&&head[1][i]==tail[1][i])etail(i);
                 else{
-                    al[i]=true;nr--;for(j=0;j<=score[i];j++)etail(i);
-                    if(board[head[0][i]][head[1][i]]>=8){by=board[head[0][i]][head[1][i]]-8;al[by]=true;nr--;for(j=0;j<=score[by];j++)etail(by);}
+                    al[i]=true;nr--;for(j=0;j<=score[i];j++)etail(i);by=board[head[0][i]][head[1][i]];
+                    if(by>=8){by-=8;al[by]=true;nr--;for(j=0;j<=score[by];j++)etail(by);}
                 }
-            }else {
-                color(15);tail[2][i]=tail[0][i];tail[3][i]=tail[1][i];gotoxy(tail[0][i],tail[1][i]);cout<<' ';
-                if(board[tail[0][i]][tail[1][i]]==1)tail[1][i]--;else if(board[tail[0][i]][tail[1][i]]==2)tail[0][i]++;else
-                if(board[tail[0][i]][tail[1][i]]==3)tail[1][i]++;else if(board[tail[0][i]][tail[1][i]]==4)tail[0][i]--;
-                if(w==false)
-                    {if(tail[0][i]==lx+1)tail[0][i]=1;if(tail[1][i]==ly+1)tail[1][i]=1;
-                    if(tail[0][i]==0)tail[0][i]=lx;if(tail[1][i]==0)tail[1][i]=ly;}
-                board[tail[2][i]][tail[3][i]]=0;
-            }
+            }else etail(i);
             if(al[i]==false)
             {
                 if(score[i]>0){color(cs);gotoxy(head[2][i],head[3][i]);cout<<'0';}
@@ -173,7 +170,7 @@ void border(int x,int y)
 }
 void etail(int e)
 {
-    color(15);tail[2][e]=tail[0][e];tail[3][e]=tail[1][by];gotoxy(tail[0][e],tail[1][e]);cout<<' ';
+    color(15);tail[2][e]=tail[0][e];tail[3][e]=tail[1][e];gotoxy(tail[0][e],tail[1][e]);cout<<' ';
     if(board[tail[0][e]][tail[1][e]]==1)tail[1][e]--;else if(board[tail[0][e]][tail[1][e]]==2)tail[0][e]++;else
     if(board[tail[0][e]][tail[1][e]]==3)tail[1][e]++;else if(board[tail[0][e]][tail[1][e]]==4)tail[0][e]--;
     if(w==false)
