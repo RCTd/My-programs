@@ -3,10 +3,67 @@
 #include <stdio.h>
 #include <windows.h>
 #include <vector>
+#include <iomanip>
+#include <queue>
+#include <math.h>
+#include <string>
 using namespace std;
 INPUT_RECORD InputRecord;DWORD Events;
 HANDLE hout =GetStdHandle(STD_OUTPUT_HANDLE);
 HANDLE hin =GetStdHandle(STD_INPUT_HANDLE);
+const int n=60;const int m=60;
+static int map[n][m];static int closed_nodes_map[n][m];
+static int open_nodes_map[n][m];static int dir_map[n][m];
+const int dir=4;static int dx[dir]={1, 0, -1, 0};static int dy[dir]={0, 1, 0, -1};
+class node
+{
+    int xPos;int yPos;int level;int priority;
+    public:node(int xp, int yp, int d, int p){xPos=xp; yPos=yp; level=d; priority=p;}
+        int getxPos() const {return xPos;}int getyPos() const {return yPos;}
+        int getLevel() const {return level;}int getPriority() const {return priority;}
+        void updatePriority(const int & xDest, const int & yDest){priority=level+estimate(xDest, yDest)*10;}
+        void nextLevel(const int & i){level+=(dir==8?(i%2==0?10:14):10);}
+        const int & estimate(const int & xDest, const int & yDest) const
+            {static int xd, yd, d;xd=xDest-xPos;yd=yDest-yPos;
+            d=static_cast<int>(sqrt(xd*xd+yd*yd));return(d);}
+};
+bool operator<(const node & a, const node & b){return a.getPriority() > b.getPriority();}
+string pathFind( const int & xStart, const int & yStart,const int & xFinish, const int & yFinish )
+{
+    static priority_queue<node> pq[2];
+    static int pqi;static node* n0;static node* m0;
+    static int i, j, x, y, xdx, ydy;static char c;pqi=0;
+    for(y=0;y<m;y++){for(x=0;x<n;x++){closed_nodes_map[x][y]=0;open_nodes_map[x][y]=0;}}
+    n0=new node(xStart, yStart, 0, 0);n0->updatePriority(xFinish, yFinish);
+    pq[pqi].push(*n0);open_nodes_map[x][y]=n0->getPriority();
+    while(!pq[pqi].empty())
+        {n0=new node( pq[pqi].top().getxPos(), pq[pqi].top().getyPos(),pq[pqi].top().getLevel(), pq[pqi].top().getPriority());
+        x=n0->getxPos(); y=n0->getyPos();pq[pqi].pop();open_nodes_map[x][y]=0;closed_nodes_map[x][y]=1;
+        if(x==xFinish && y==yFinish)
+            {string path="";while(!(x==xStart && y==yStart)){j=dir_map[x][y];c='0'+(j+dir/2)%dir;path=c+path;x+=dx[j];y+=dy[j];}
+            delete n0;while(!pq[pqi].empty()) pq[pqi].pop();return path;}
+        for(i=0;i<dir;i++)
+            {xdx=x+dx[i]; ydy=y+dy[i];
+            if(!(xdx<0 || xdx>n-1 || ydy<0 || ydy>m-1 || map[xdx][ydy]==1|| closed_nodes_map[xdx][ydy]==1))
+                {m0=new node( xdx, ydy, n0->getLevel(),n0->getPriority());
+                m0->nextLevel(i);m0->updatePriority(xFinish, yFinish);
+                if(open_nodes_map[xdx][ydy]==0)
+                    {open_nodes_map[xdx][ydy]=m0->getPriority();
+                    pq[pqi].push(*m0);dir_map[xdx][ydy]=(i+dir/2)%dir;}
+                else if(open_nodes_map[xdx][ydy]>m0->getPriority())
+                    {open_nodes_map[xdx][ydy]=m0->getPriority();
+                    dir_map[xdx][ydy]=(i+dir/2)%dir;
+                    while(!(pq[pqi].top().getxPos()==xdx &&pq[pqi].top().getyPos()==ydy))
+                        {pq[1-pqi].push(pq[pqi].top());pq[pqi].pop();}
+                    pq[pqi].pop();
+                    if(pq[pqi].size()>pq[1-pqi].size()) pqi=1-pqi;
+                    while(!pq[pqi].empty()){pq[1-pqi].push(pq[pqi].top());pq[pqi].pop();}
+                    pqi=1-pqi;pq[pqi].push(*m0);}
+                else delete m0;}}
+        delete n0;}
+    return "";
+}
+//.........................................................................................
 void gotoxy(int x,int y);void border(int lx,int ly);void color(int c);void etail(int e);
 int v=0,np=1,na=1,tr=150,ti=tr,t=tr,ve=1,lx=30,ly=30,d;
 int p=0,i,j,nr,ca=204,cs=255,hscor=0,tsco,by,bx,f,c=0,g;
@@ -49,7 +106,7 @@ int main()
             if(v==1&&np>1){np--;gotoxy(14,1);cout<<"    ";gotoxy(14,1);cout<<np<<" +";Sleep(200);}else
             if(v==2&&na>1){na--;gotoxy(14,2);cout<<"    ";gotoxy(14,2);cout<<na<<" +";Sleep(200);}else
             if(v==3){ti++;Sleep(50);gotoxy(14,3);cout<<"      ";gotoxy(14,3);cout<<tr-ti<<" +";}else
-            if(v==4&&ve>1){ve--;gotoxy(14,4);cout<<"    ";gotoxy(14,4);cout<<ve<<" +";Sleep(200);}
+            if(v==4&&ve>0){ve--;gotoxy(14,4);cout<<"    ";gotoxy(14,4);cout<<ve<<" +";Sleep(200);}
         }
         if(GetAsyncKeyState(VK_RIGHT))
         {
@@ -119,20 +176,30 @@ int main()
         for(i=0;i<np;i++)if(al[i]==false)
         {
             head[2][i]=head[0][i];head[3][i]=head[1][i];
-            if(GetAsyncKeyState('1')){Sleep(200);while(!GetAsyncKeyState('1'))Sleep(200);}
+            if(GetAsyncKeyState('1')){Sleep(200);while(!GetAsyncKeyState('1'))Sleep(100);}
             if(GetAsyncKeyState(VK_ESCAPE)){Sleep(200);goto i1;}
             if(GetAsyncKeyState(VK_SPACE))Sleep(200);
             if(ai[i]!=0)
             {
+                for(j=0;j<np;j++)if(j!=i&&al[j]==false)board[head[0][j]][head[1][j]]=8+j;
                 for(j=0,g=0,d=10000000;j<na;j++){bx=ax[j]-head[0][i];if(bx<0)bx*=(-1);by=ay[j]-head[1][i];if(by<0)by*=(-1);if(d>=by+bx){d=by+bx;g=j;}}
-                if(head[0][i]<ax[g]&&direct[0][i]!=4&&(board[head[0][i]+1][head[1][i]]==0||board[head[0][i]+1][head[1][i]]<0))direct[1][i]=2;else
+                /*if(head[0][i]<ax[g]&&direct[0][i]!=4&&(board[head[0][i]+1][head[1][i]]==0||board[head[0][i]+1][head[1][i]]<0))direct[1][i]=2;else
                 if(head[1][i]<ay[g]&&direct[0][i]!=1&&(board[head[0][i]][head[1][i]+1]==0||board[head[0][i]][head[1][i]+1]<0))direct[1][i]=3;else
                 if(head[0][i]>ax[g]&&direct[0][i]!=2&&(board[head[0][i]-1][head[1][i]]==0||board[head[0][i]-1][head[1][i]]<0))direct[1][i]=4;else
-                if(head[1][i]>ay[g]&&direct[0][i]!=3&&(board[head[0][i]][head[1][i]-1]==0||board[head[0][i]][head[1][i]-1]<0))direct[1][i]=1;else
-                if(board[head[0][i]+1][head[1][i]]==0||board[head[0][i]+1][head[1][i]]<0)direct[1][i]=2;else
-                if(board[head[0][i]][head[1][i]-1]==0||board[head[0][i]][head[1][i]-1]<0)direct[1][i]=1;else
-                if(board[head[0][i]][head[1][i]+1]==0||board[head[0][i]][head[1][i]+1]<0)direct[1][i]=3;else
-                if(board[head[0][i]-1][head[1][i]]==0||board[head[0][i]-1][head[1][i]]<0)direct[1][i]=4;
+                if(head[1][i]>ay[g]&&direct[0][i]!=3&&(board[head[0][i]][head[1][i]-1]==0||board[head[0][i]][head[1][i]-1]<0))direct[1][i]=1;else*/
+
+                for(int y=0;y<ly;y++)for(int x=0;x<lx;x++)if(board[x][y]==0||board[x][y]<0)map[x][y]=0;else map[x][y]=1;
+                string route=pathFind(head[0][i],head[1][i],ax[g],ay[g]);
+                if(route==""){
+                    if(board[head[0][i]+1][head[1][i]]==0||board[head[0][i]+1][head[1][i]]<0)direct[1][i]=2;else
+                    if(board[head[0][i]][head[1][i]-1]==0||board[head[0][i]][head[1][i]-1]<0)direct[1][i]=1;else
+                    if(board[head[0][i]][head[1][i]+1]==0||board[head[0][i]][head[1][i]+1]<0)direct[1][i]=3;else
+                    if(board[head[0][i]-1][head[1][i]]==0||board[head[0][i]-1][head[1][i]]<0)direct[1][i]=4;
+                }else
+                {   switch(route.at(0))
+                    {case '0':route.at(0)='2';break;case '1':route.at(0)='3';break;case '2':route.at(0)='4';break;case '3':route.at(0)='1';break;}
+                    direct[1][i]=int(route.at(0))-48;
+                }
             }
             if(GetAsyncKeyState(q[i][0]))direct[1][i]=1;if(GetAsyncKeyState(q[i][1]))direct[1][i]=3;
             if(GetAsyncKeyState(q[i][2]))direct[1][i]=4;if(GetAsyncKeyState(q[i][3]))direct[1][i]=2;
