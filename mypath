@@ -1,9 +1,6 @@
 #include <iostream>
-#include <windows.h>
 using namespace std;
-INPUT_RECORD InputRecord;DWORD Events;
-HANDLE hout =GetStdHandle(STD_OUTPUT_HANDLE);
-void gotoxy(int x,int y);
+
 int main()
 {
     int i,j,m[21][21],sx,sy;
@@ -15,23 +12,23 @@ int main()
         {
             if(m[i][j]==0)
             {
-                if(j-1<0){if(m[i][20]>0&&m[i][20]<m[i][j]) m[i][j]=m[i][20]+1;}else
-                    if(m[i][j-1]>0&&m[i][j-1]<m[i][j]) m[i][j]=m[i][j-1]+1;
-                if(i+1>20){if(m[0][j]>0&&m[0][j]<m[i][j]) m[i][j]=m[0][j]+1;}else
-                    if(m[i+1][j]>0&&m[i+1][j]<m[i][j]) m[i][j]=m[i+1][j]+1;
-                if(j+1>20){if(m[i][0]>0&&m[i][0]<m[i][j])m[i][j]=m[i][0]+1;}else
-                    if(m[i][j+1]>0&&m[i][j+1]<m[i][j])m[i][j]=m[i][j+1]+1;
-                if(i-1<0){if(m[20][j]>0&m[20][j]<m[i][j])m[i][j]=m[20][j]+1;}else
-                    if(m[i-1][j]>0&&m[i-1][j]<m[i][j])m[i][j]=m[i-1][j]+1;
+                if(j-1<0){if(m[i][20]>0) m[i][j]=m[i][20]+1;}else
+                    if(m[i][j-1]>0) m[i][j]=m[i][j-1]+1;
+                if(i+1>20){if(m[0][j]>0) m[i][j]=m[0][j]+1;}else
+                    if(m[i+1][j]>0) m[i][j]=m[i+1][j]+1;
+                if(j+1>20){if(m[i][0]>0)m[i][j]=m[i][0]+1;}else
+                    if(m[i][j+1]>0)m[i][j]=m[i][j+1]+1;
+                if(i-1<0){if(m[20][j]>0)m[i][j]=m[20][j]+1;}else
+                    if(m[i-1][j]>0)m[i][j]=m[i-1][j]+1;
             }
-            if(j-1<0){if(m[i][20]>m[i][j]&&m[i][20]>0)m[i][j]=m[i][20]+1;}else
-                if(m[i][j-1]>m[i][j]&&m[i][j-1]>0)m[i][j]=m[i][j-1]+1;
-            if(i+1>20){if(m[0][j]>m[i][j]&&m[0][j]>0)m[i][j]=m[0][j]+1;}else
-                if(m[i+1][j]>m[i][j]&&m[i+1][j]>0)m[i][j]=m[i+1][j]+1;
-            if(j+1>20){if(m[i][0]>m[i][j]&&m[i][0]>0)m[i][j]=m[i][0]+1;}else
-                if(m[i][j+1]>m[i][j]&&m[i][j+1]>0)m[i][j]=m[i][j+1]+1;
-            if(i-1<0){if(m[20][j]>m[i][j]&&m[20][j]>0)m[i][j]=m[20][j]+1;}else
-                if(m[i-1][j]>m[i][j]&&m[i-1][j]>0)m[i][j]=m[i-1][j]+1;
+            if(j-1<0){if(m[i][20]<m[i][j]&&m[i][20]>0)m[i][j]=m[i][20]+1;}else
+                if(m[i][j-1]<m[i][j]&&m[i][j-1]>0)m[i][j]=m[i][j-1]+1;
+            if(i+1>20){if(m[0][j]<m[i][j]&&m[0][j]>0)m[i][j]=m[0][j]+1;}else
+                if(m[i+1][j]<m[i][j]&&m[i+1][j]>0)m[i][j]=m[i+1][j]+1;
+            if(j+1>20){if(m[i][0]<m[i][j]&&m[i][0]>0)m[i][j]=m[i][0]+1;}else
+                if(m[i][j+1]<m[i][j]&&m[i][j+1]>0)m[i][j]=m[i][j+1]+1;
+            if(i-1<0){if(m[20][j]<m[i][j]&&m[20][j]>0)m[i][j]=m[20][j]+1;}else
+                if(m[i-1][j]<m[i][j]&&m[i-1][j]>0)m[i][j]=m[i-1][j]+1;
         }
     cout<<"\n";
     for(j=0;j<21;j++)
@@ -44,6 +41,3 @@ int main()
     }
     return 0;
 }
-void gotoxy(int x,int y)
-    {COORD coord;coord.X=x;coord.Y=y;
-    SetConsoleCursorPosition(hout,coord);}
