@@ -13,10 +13,10 @@ void dot();
 int main()
 {
     for(j=0;j<=L;j++)for(i=0;i<=l;i++){m[i][j]=0;e++;}
-    for(j=0;j<=L;j++)
-        {gotoxy(l,j);cout<<"|";}
+    for(j=0;j<=L+1;j++)
+        {gotoxy(l+1,j);cout<<"|";}
     for(j=l;j>=0;j--)
-        {gotoxy(j,L);cout<<"-";}
+        {gotoxy(j,L+1);cout<<"-";}
     while(!GetAsyncKeyState(VK_RETURN))
     {
         ReadConsoleInput(hin,&InputRecord,1,&Events);
@@ -62,7 +62,7 @@ int main()
         for(j=L;j>=0;j--)for(i=0;i<=l;i++)dot();
         for(j=0;j<=L;j++)for(i=l;i>=0;i--)dot();
     }
-    
+
     gotoxy(0,0);
     for(j=0;j<=L;j++)
     {
