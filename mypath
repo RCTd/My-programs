@@ -1,27 +1,96 @@
 #include <iostream>
+#include <windows.h>
 using namespace std;
- int i,j,m[201][201],sx,sy,l,L,e=0;
+
+HANDLE hout =GetStdHandle(STD_OUTPUT_HANDLE);
+HANDLE hin  =GetStdHandle(STD_INPUT_HANDLE);
+INPUT_RECORD InputRecord;DWORD Events;
+void gotoxy(int x,int y)
+    {COORD coord;coord.X=x;coord.Y=y;
+    SetConsoleCursorPosition(hout,coord);}
+int i,j,m[201][201],sx,sy,l=20,L=20,e=20,fx,fy,bx,by,d=0;
 void dot();
 int main()
 {
-    cin>>l>>L>>sx>>sy; for(j=0;j<=L;j++)for(i=0;i<=l;i++){m[i][j]=0;e++;}
-    m[sx-1][sy-1]=1;e--;
-    while(e>1)
+    for(j=0;j<=L;j++)for(i=0;i<=l;i++){m[i][j]=0;e++;}
+    for(j=0;j<=L+1;j++)
+        {gotoxy(l+1,j);cout<<"|";}
+    for(j=l;j>=0;j--)
+        {gotoxy(j,L+1);cout<<"-";}
+    while(!GetAsyncKeyState(VK_RETURN))
+    {
+        ReadConsoleInput(hin,&InputRecord,1,&Events);
+        bx=InputRecord.Event.MouseEvent.dwMousePosition.X;
+        by=InputRecord.Event.MouseEvent.dwMousePosition.Y;
+        if(GetAsyncKeyState(VK_LBUTTON)&&by<60&&bx<60){
+        gotoxy(bx,by);cout<<'O';
+        if(m[bx][by]==0)e--;m[bx][by]=-1;}
+        if(GetAsyncKeyState(VK_RBUTTON)&&by<60&&bx<60){
+        gotoxy(bx,by);cout<<' ';
+        if(m[bx][by]==-1)e++;m[bx][by]=0;}
+        if(GetAsyncKeyState('S')&&by<60&&bx<60)
+        {
+            ReadConsoleInput(hin,&InputRecord,1,&Events);
+        bx=InputRecord.Event.MouseEvent.dwMousePosition.X;
+        by=InputRecord.Event.MouseEvent.dwMousePosition.Y;
+        ReadConsoleInput(hin,&InputRecord,1,&Events);
+        bx=InputRecord.Event.MouseEvent.dwMousePosition.X;
+        by=InputRecord.Event.MouseEvent.dwMousePosition.Y;
+            Sleep(200);
+            gotoxy(bx,by);cout<<'S';
+            sx=bx;sy=by;e--;
+        }
+        if(GetAsyncKeyState('F')&&by<60&&bx<60)
+        {
+            ReadConsoleInput(hin,&InputRecord,1,&Events);
+        bx=InputRecord.Event.MouseEvent.dwMousePosition.X;
+        by=InputRecord.Event.MouseEvent.dwMousePosition.Y;
+        ReadConsoleInput(hin,&InputRecord,1,&Events);
+        bx=InputRecord.Event.MouseEvent.dwMousePosition.X;
+        by=InputRecord.Event.MouseEvent.dwMousePosition.Y;
+            Sleep(200);
+            gotoxy(bx,by);cout<<'F';
+            fx=bx;fy=by;
+        }
+
+    }
+    m[sx][sy]=1;
+    while(e>0)
     {
         for(j=0;j<=L;j++)for(i=0;i<=l;i++)dot();
         for(j=L;j>=0;j--)for(i=l;i>=0;i--)dot();
         for(j=L;j>=0;j--)for(i=0;i<=l;i++)dot();
         for(j=0;j<=L;j++)for(i=l;i>=0;i--)dot();
     }
-    cout<<"\n";
+    while(d)
+    {
+        if(fx==sx)
+        {
+            if(fy-1<0){if(sy==L)d=3;}
+                else if(fy-1==sy)d=3;
+            if(fy+1>L){if(sy==0)d=1;}
+                else if(fy+1==sy)d=1;
+        }
+        if(fy==sy)
+        {
+            if(fx+1>l){if(sx==0)d=4;}
+                else if(fx+1==sx)d=4;
+            if(fx-1<0){if(sx==l)d=2;}
+                else if(fx-1==sx)d=2;
+        }
+    }
+    gotoxy(0,0);
     for(j=0;j<=L;j++)
     {
         for(i=0;i<=l;i++)
         {
-            if(m[i][j]<9)cout<<m[i][j]<<"  ";else
-            cout<<m[i][j]<<" ";
+            cout<<m[i][j];
+            if(m[i][j]<10&&m[i][j]>=0)cout<<"  ";
+            else cout<<" ";
         }cout<<"\n";
     }
+    cout<<"\n";
+    cout<<d;
     return 0;
 }
 void dot()
@@ -37,12 +106,13 @@ void dot()
         if(i-1<0){if(m[l][j]>0){m[i][j]=m[l][j]+1;e--;}}else
             if(m[i-1][j]>0){m[i][j]=m[i-1][j]+1;e--;}
     }
-    if(j-1<0){if(m[i][L]<m[i][j]&&m[i][L]>0)m[i][j]=m[i][L]+1;}else
-        if(m[i][j-1]<m[i][j]&&m[i][j-1]>0)m[i][j]=m[i][j-1]+1;
-    if(i+1>l){if(m[0][j]<m[i][j]&&m[0][j]>0)m[i][j]=m[0][j]+1;}else
-        if(m[i+1][j]<m[i][j]&&m[i+1][j]>0)m[i][j]=m[i+1][j]+1;
-    if(j+1>L){if(m[i][0]<m[i][j]&&m[i][0]>0)m[i][j]=m[i][0]+1;}else
-        if(m[i][j+1]<m[i][j]&&m[i][j+1]>0)m[i][j]=m[i][j+1]+1;
-    if(i-1<0){if(m[l][j]<m[i][j]&&m[l][j]>0)m[i][j]=m[l][j]+1;}else
-        if(m[i-1][j]<m[i][j]&&m[i-1][j]>0)m[i][j]=m[i-1][j]+1;
+    if(j-1<0){if(m[i][L]<m[i][j]&&m[i][L]>0){m[i][j]=m[i][L]+1;}}else
+        if(m[i][j-1]<m[i][j]&&m[i][j-1]>0){m[i][j]=m[i][j-1]+1;}
+    if(i+1>l){if(m[0][j]<m[i][j]&&m[0][j]>0){m[i][j]=m[0][j]+1;}}else
+        if(m[i+1][j]<m[i][j]&&m[i+1][j]>0){m[i][j]=m[i+1][j]+1;}
+    if(j+1>L){if(m[i][0]<m[i][j]&&m[i][0]>0){m[i][j]=m[i][0]+1;}}else
+        if(m[i][j+1]<m[i][j]&&m[i][j+1]>0){m[i][j]=m[i][j+1]+1;}
+    if(i-1<0){if(m[l][j]<m[i][j]&&m[l][j]>0){m[i][j]=m[l][j]+1;}}else
+        if(m[i-1][j]<m[i][j]&&m[i-1][j]>0){m[i][j]=m[i-1][j]+1;}
 }
+
