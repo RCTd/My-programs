@@ -62,7 +62,10 @@ int main()
         for(j=L;j>=0;j--)for(i=0;i<=l;i++)dot();
         for(j=0;j<=L;j++)for(i=l;i>=0;i--)dot();
     }
-
+    while(fx!=sx&&fy!=sy)
+    {
+        
+    }
     gotoxy(0,0);
     for(j=0;j<=L;j++)
     {
@@ -72,7 +75,6 @@ int main()
             if(m[i][j]<10&&m[i][j]>0)cout<<" ";
         }cout<<"\n";
     }
-
     return 0;
 }
 void dot()
