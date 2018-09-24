@@ -8,7 +8,7 @@ INPUT_RECORD InputRecord;DWORD Events;
 void gotoxy(int x,int y)
     {COORD coord;coord.X=x;coord.Y=y;
     SetConsoleCursorPosition(hout,coord);}
-int i,j,m[201][201],sx,sy,l=20,L=20,e=20,fx,fy,bx,by,d=0;
+int i,j,m[201][201],sx,sy,l=20,L=20,e=0,fx,fy,bx,by,d=0,xx,xy;
 void dot();
 int main()
 {
@@ -52,8 +52,8 @@ int main()
             gotoxy(bx,by);cout<<'F';
             fx=bx;fy=by;
         }
-
     }
+    xx=fx;xy=fy;
     m[sx][sy]=1;
     while(e>0)
     {
@@ -62,7 +62,7 @@ int main()
         for(j=L;j>=0;j--)for(i=0;i<=l;i++)dot();
         for(j=0;j<=L;j++)for(i=l;i>=0;i--)dot();
     }
-    while(d)
+    while(d==0)
     {
         if(fx==sx)
         {
@@ -78,13 +78,25 @@ int main()
             if(fx-1<0){if(sx==l)d=2;}
                 else if(fx-1==sx)d=2;
         }
+        if(fy-1<0){if(m[fx][L]>0&&m[fx][fy]>m[fx][L])fy=L;}
+            else if(m[fx][fy-1]>0&&m[fx][fy]>m[fx][fy-1])fy--;else
+        if(fx+1>l){if(m[0][fy]>0&&m[fx][fy]>m[0][fy])fx=0;}
+            else if(m[fx+1][fy]>0&&m[fx][fy]>m[fx+1][fy])fx++;else
+        if(fy+1>L){if(m[fx][0]>0&&m[fx][fy]>m[fx][0])fy=0;}
+            else if(m[fx][fy+1]>0&&m[fx][fy]>m[fx][fy+1])fy++;else
+        if(fx-1<0){if(m[l][fy]>0&&m[fx][fy]>m[l][fy])fx=l;}
+            else if(m[fx-1][fy]>0&&m[fx][fy]>m[fx-1][fy])fx--;
+        else d=5;
     }
     gotoxy(0,0);
     for(j=0;j<=L;j++)
     {
         for(i=0;i<=l;i++)
         {
+            if(i==xx&&j==xy)
+                SetConsoleTextAttribute(hout,40);
             cout<<m[i][j];
+            SetConsoleTextAttribute(hout,7);
             if(m[i][j]<10&&m[i][j]>=0)cout<<"  ";
             else cout<<" ";
         }cout<<"\n";
@@ -115,4 +127,3 @@ void dot()
     if(i-1<0){if(m[l][j]<m[i][j]&&m[l][j]>0){m[i][j]=m[l][j]+1;}}else
         if(m[i-1][j]<m[i][j]&&m[i-1][j]>0){m[i][j]=m[i-1][j]+1;}
 }
-
