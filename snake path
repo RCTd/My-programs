@@ -1,0 +1,273 @@
+#include <iostream>
+#include <ctime>
+#include <stdio.h>
+#include <windows.h>
+#include <vector>
+#include <iomanip>
+#include <queue>
+#include <math.h>
+#include <string>
+using namespace std;
+INPUT_RECORD InputRecord;DWORD Events;
+HANDLE hout =GetStdHandle(STD_OUTPUT_HANDLE);
+HANDLE hin =GetStdHandle(STD_INPUT_HANDLE);
+int m[201][201],e=-2,dir=0,ii,jj;
+void dot();
+void direction(int sx,int sy,int fx,int fy);
+//.........................................................................................
+void gotoxy(int x,int y);void border(int lx,int ly);void color(int c);void etail(int e);
+int v=0,np=1,na=1,tr=150,ti=tr,t=tr,ve=1,lx=30,ly=30,d;
+int p=0,i,j,nr,ca=204,cs=255,hscor=0,tsco,by,bx,f,c=0,g;
+bool w=false;
+vector<int>ai(30,1);
+vector<int>ax(500);vector<int>ay(500);
+vector<vector<char> >q(30,vector<char>(4,'0'));
+vector<int> co(30,170);vector<int>score(20,0);
+vector<bool>al(30,false);vector <int> add;
+vector<vector<int> >head(4,vector<int>(30));
+vector<vector<int> >tail(4,vector<int>(30));
+vector<vector<int> >direct(2,vector<int>(30));
+vector<vector<int> >board(lx+2,vector<int>(ly+2));
+int main()
+{
+    //ai[0]=0;
+    q[0][0]=38;q[0][1]=40;q[0][2]=37;q[0][3]=39;
+    q[1][0]='W';q[1][1]='S';q[1][2]='A';q[1][3]='D';
+    q[2][0]='D';q[2][1]='C';q[2][2]='X';q[2][3]='V';
+    q[3][0]='4';q[3][1]='R';q[3][2]='E';q[3][3]='T';
+    q[4][0]='H';q[4][1]='N';q[4][2]='B';q[4][3]='M';
+    q[5][0]='I';q[5][1]='K';q[5][2]='J';q[5][3]='L';
+    CONSOLE_CURSOR_INFO ConCurInf;ConCurInf.dwSize = 10;ConCurInf.bVisible = false;
+    SetConsoleCursorInfo(hout, &ConCurInf);SMALL_RECT DisplayArea= {0,0,lx+25,ly+3};
+    SetConsoleWindowInfo(hout,TRUE,&DisplayArea);goto i3;
+    i1:system("CLS");color(15);gotoxy(0,v);cout<<"->";gotoxy(3,0);cout<<"Wall";
+    if(w==true){gotoxy(12,0);color(12);cout<<"Yes";color(15);cout<<"/No";}else
+        {gotoxy(12,0);cout<<"Yes/";color(12);cout<<"No";color(15);}
+    gotoxy(3,1);cout<<"Players";gotoxy(12,1);cout<<"- "<<np<<" +";
+    gotoxy(3,2);cout<<"Apples";gotoxy(12,2);cout<<"- "<<na<<" +";
+    gotoxy(3,3);cout<<"Speed";gotoxy(12,3);cout<<"- "<<tr-ti<<" +";
+    gotoxy(3,4);cout<<"Velocity";gotoxy(12,4);cout<<"- "<<ve<<" +";
+    gotoxy(3,5);cout<<"Options";Sleep(200);
+    while(!GetAsyncKeyState(VK_RETURN))
+    {
+        if(GetAsyncKeyState(VK_UP)&&v>0){gotoxy(0,v);cout<<"  ";v--;gotoxy(0,v);cout<<"->";Sleep(200);}
+        if(GetAsyncKeyState(VK_DOWN)&&v<5){gotoxy(0,v);cout<<"  ";v++;gotoxy(0,v);cout<<"->";Sleep(200);}
+        if(GetAsyncKeyState(VK_LEFT))
+        {
+            if(v==0&&w==false){gotoxy(12,0);color(12);cout<<"Yes";color(15);cout<<"/No";w=true;Sleep(200);}else
+            if(v==1&&np>1){np--;gotoxy(14,1);cout<<"    ";gotoxy(14,1);cout<<np<<" +";Sleep(200);}else
+            if(v==2&&na>1){na--;gotoxy(14,2);cout<<"    ";gotoxy(14,2);cout<<na<<" +";Sleep(200);}else
+            if(v==3){ti++;Sleep(50);gotoxy(14,3);cout<<"      ";gotoxy(14,3);cout<<tr-ti<<" +";}else
+            if(v==4&&ve>0){ve--;gotoxy(14,4);cout<<"    ";gotoxy(14,4);cout<<ve<<" +";Sleep(200);}
+        }
+        if(GetAsyncKeyState(VK_RIGHT))
+        {
+            if(v==0&&w==true){gotoxy(12,0);color(15);cout<<"Yes/";color(12);cout<<"No";w=false;Sleep(200);}else
+            if(v==1&&np<15){head.push_back(add);tail.push_back(add);direct.push_back(add);co.push_back(170);score.push_back(0);
+                al.push_back(false);np++;gotoxy(14,1);cout<<"    ";gotoxy(14,1);cout<<np<<" +";Sleep(200);}else
+            if(v==2){na++;gotoxy(14,2);cout<<"    ";gotoxy(14,2);cout<<na<<" +";Sleep(200);}else
+            if(v==3&&ti>0){ti--;Sleep(50);gotoxy(14,3);cout<<"      ";gotoxy(14,3);cout<<tr-ti<<" +";}else
+            if(v==4){ve++;gotoxy(14,4);cout<<"    ";gotoxy(14,4);cout<<ve<<" +";Sleep(200);}
+        }
+        color(15);
+    }Sleep(200);
+    if(v==5)
+    {
+        v=0;i2:for(p=0;p<np+6;p++){gotoxy(3,6+p);cout<<"                       ";}
+        gotoxy(0,5);cout<<"  ";gotoxy(3,6+v);cout<<"->";Sleep(200);
+        for(p=0;p<np;p++){gotoxy(6,6+p);cout<<"Player "<<p+1;gotoxy(15,6+p);cout<<"- ";color(co[p]);cout<<' ';color(15);cout<<" +";}
+        while(!GetAsyncKeyState(VK_RETURN))
+            {if(GetAsyncKeyState(VK_ESCAPE)){for(p=0;p<np+2;p++){gotoxy(3,6+p);cout<<"                ";}v=5;goto i1;}
+            if(GetAsyncKeyState(VK_UP)&&v>0){gotoxy(3,6+v);cout<<"  ";v--;gotoxy(3,6+v);cout<<"->";Sleep(200);}
+            if(GetAsyncKeyState(VK_DOWN)&&v<np-1){gotoxy(3,6+v);cout<<"  ";v++;gotoxy(3,6+v);cout<<"->";Sleep(200);}
+            if(GetAsyncKeyState(VK_LEFT))
+                {if(co[v]==17)co[v]=255;else co[v]-=17;gotoxy(17,6+v);color(co[v]);cout<<'0';Sleep(200);color(15);}
+            if(GetAsyncKeyState(VK_RIGHT))
+                {if(co[v]==255)co[v]=17;else co[v]+=17;gotoxy(17,6+v);color(co[v]);cout<<'0';Sleep(200);color(15);}
+            }Sleep(200);
+        for(p=0;p<np+2;p++){gotoxy(3,6+p);cout<<"                   ";}
+        gotoxy(6,6);cout<<"Player "<<v+1;f=0;gotoxy(5,7);
+        if(ai[v]==0)cout<<"-> Ai? - no  +";else cout<<"-> Ai? - yes +";
+        gotoxy(8,8); cout<<"UP....."<<q[v][0];
+        gotoxy(8,9); cout<<"DOWN..."<<q[v][1];
+        gotoxy(8,10);cout<<"LEFT..."<<q[v][2];
+        gotoxy(8,11);cout<<"RIGHT.."<<q[v][3];
+        while(!GetAsyncKeyState(VK_RETURN))
+            {if(GetAsyncKeyState(VK_ESCAPE))goto i2;
+            if(GetAsyncKeyState(VK_UP)&&f>0){gotoxy(5,f+7);cout<<"  ";f--;gotoxy(5,f+7);cout<<"->";Sleep(200);}
+            if(GetAsyncKeyState(VK_DOWN)&&f<4){gotoxy(5,f+7);cout<<"  ";f++;gotoxy(5,f+7);cout<<"->";Sleep(200);}
+            if(GetAsyncKeyState(VK_LEFT)&&ai[v]==1){gotoxy(14,7);cout<<"no ";ai[v]=0;}
+            if(GetAsyncKeyState(VK_RIGHT)&&ai[v]==0){gotoxy(14,7);cout<<"yes";ai[v]=1;}
+            }Sleep(200);
+    }
+    i3:srand(time(NULL));t=ti;
+    for(i=0;i<ly+1;i++)for(j=0;j<lx+1;j++)board[j][i]=0;
+    if(w==true)
+    for(i=0;i<lx+1;i++){board[i][0]=7;board[i][ly+1]=7;}
+    for(i=0;i<ly+1;i++){board[0][i]=7;board[lx+1][i]=7;}
+    system("CLS");border(lx,ly);nr=np;
+    for(i=0;i<np;i++)
+    {
+        direct[0][i]=0;direct[1][i]=0;score[i]=0;al[i]=false;
+        ha:head[0][i]=rand()%(lx-3)+1;head[1][i]=rand()%(ly-3)+1;
+        if(board[head[0][i]][head[1][i]]!=0)goto ha;
+        tail[0][i]=head[0][i];tail[1][i]=head[1][i];
+        gotoxy(head[0][i],head[1][i]);color(co[i]);cout<<'0';
+    }
+    for(g=0;g<na;g++)
+    {
+        aa:ax[g]=rand()%(lx)+1;ay[g]=rand()%(ly)+1;
+        if(board[ax[g]][ay[g]]!=0)goto aa;
+        gotoxy(ax[g],ay[g]);color(ca);cout<<'X';
+        board[ax[g]][ay[g]]=-5-g;
+    }
+    color(15);gotoxy(lx+4,3);cout<<"THigh scor";gotoxy(lx+4,4);cout<<"TScor ";gotoxy(lx+4,5);cout<<"Speed ";
+    if(np!=1)for(i=1;i<=np;i++){gotoxy(lx+4,7+i);cout<<"Score "<<i;color(co[i-1]);cout<<' ';color(15);cout<<':';}
+    while(nr)
+    {
+        for(i=0;i<np;i++)if(al[i]==false)
+        {
+            head[2][i]=head[0][i];head[3][i]=head[1][i];
+            if(GetAsyncKeyState('1')){Sleep(200);while(!GetAsyncKeyState('1'))Sleep(100);}
+            if(GetAsyncKeyState(VK_ESCAPE)){goto i1;}
+            if(GetAsyncKeyState(VK_SPACE))Sleep(200);
+            if(ai[i]!=0)
+            {
+                for(j=0;j<np;j++)if(j!=i&&al[j]==false)board[head[0][j]][head[1][j]]=8+j;
+                for(j=0,g=0,d=10000000;j<na;j++){bx=ax[j]-head[0][i];if(bx<0)bx*=(-1);by=ay[j]-head[1][i];if(by<0)by*=(-1);if(d>=by+bx){d=by+bx;g=j;}}
+                /*if(head[0][i]<ax[g]&&direct[0][i]!=4&&(board[head[0][i]+1][head[1][i]]==0||board[head[0][i]+1][head[1][i]]<0))direct[1][i]=2;else
+                if(head[1][i]<ay[g]&&direct[0][i]!=1&&(board[head[0][i]][head[1][i]+1]==0||board[head[0][i]][head[1][i]+1]<0))direct[1][i]=3;else
+                if(head[0][i]>ax[g]&&direct[0][i]!=2&&(board[head[0][i]-1][head[1][i]]==0||board[head[0][i]-1][head[1][i]]<0))direct[1][i]=4;else
+                if(head[1][i]>ay[g]&&direct[0][i]!=3&&(board[head[0][i]][head[1][i]-1]==0||board[head[0][i]][head[1][i]-1]<0))direct[1][i]=1;else*/
+                e=-2;dir=0;
+                for(int y=0;y<ly;y++)for(int x=0;x<lx;x++)if(board[x][y]==0||board[x][y]<0){m[x][y]=0;e++;}else m[x][y]=-1;
+                direction(head[0][i],head[1][i],ax[g],ay[g]);
+                if(dir==5){
+                    if(board[head[0][i]+1][head[1][i]]==0||board[head[0][i]+1][head[1][i]]<0)direct[1][i]=2;else
+                    if(board[head[0][i]][head[1][i]-1]==0||board[head[0][i]][head[1][i]-1]<0)direct[1][i]=1;else
+                    if(board[head[0][i]][head[1][i]+1]==0||board[head[0][i]][head[1][i]+1]<0)direct[1][i]=3;else
+                    if(board[head[0][i]-1][head[1][i]]==0||board[head[0][i]-1][head[1][i]]<0)direct[1][i]=4;
+                }else
+                    direct[1][i]=dir;
+            }
+            if(GetAsyncKeyState(q[i][0]))direct[1][i]=1;if(GetAsyncKeyState(q[i][1]))direct[1][i]=3;
+            if(GetAsyncKeyState(q[i][2]))direct[1][i]=4;if(GetAsyncKeyState(q[i][3]))direct[1][i]=2;
+            if((direct[1][i]!=direct[0][i])&&((((direct[1][i]%2==0&&direct[0][i]%2!=0)||(direct[1][i]%2!=0&&direct[0][i]%2==0)))||(score[i]==0)))
+                direct[0][i]=direct[1][i];
+            board[head[0][i]][head[1][i]]=direct[0][i];
+
+            switch(direct[0][i]){case 1:head[1][i]--;break;case 2:head[0][i]++;break;case 3:head[1][i]++;break;case 4:head[0][i]--;break;}
+            if(w==false){if(head[0][i]==lx+1)head[0][i]=1;if(head[1][i]==ly+1)head[1][i]=1;if(head[0][i]==0)head[0][i]=lx;if(head[1][i]==0)head[1][i]=ly;}
+
+            for(j=0;j<np;j++)if(j!=i&&al[j]==false)board[head[0][j]][head[1][j]]=8+j;
+            if(board[head[0][i]][head[1][i]]!=0)
+            {
+                if(board[head[0][i]][head[1][i]]<0)
+                {
+                    g=(board[head[0][i]][head[1][i]]+5)*(-1);
+                    score[i]++;if(t>0)t-=ve;ret:ax[g]=rand()%(lx)+1;ay[g]=rand()%(ly)+1;
+                    color(ca);gotoxy(ax[g],ay[g]);if(board[ax[g]][ay[g]]!=0)goto ret;
+                    cout<<'X';board[ax[g]][ay[g]]=-5-g;color(15);
+                }else
+                if(head[0][i]==tail[0][i]&&head[1][i]==tail[1][i])etail(i);
+                else{
+                    al[i]=true;nr--;for(j=0;j<=score[i];j++)etail(i);by=board[head[0][i]][head[1][i]];
+                    if(by>=8){by-=8;al[by]=true;nr--;for(j=0;j<=score[by];j++)etail(by);}
+                }
+            }else etail(i);
+            if(al[i]==false)
+            {
+                if(score[i]>0){color(cs);gotoxy(head[2][i],head[3][i]);cout<<'0';}
+                color(co[i]);gotoxy(head[0][i],head[1][i]);cout<<'0';
+            }
+            tsco=0;for(j=0;j<np;j++)tsco+=score[j];
+            color(15);gotoxy(lx+15,3);cout<<hscor;gotoxy(lx+10,4);cout<<tsco;
+            if(np!=1)for(j=0;j<np;j++){gotoxy(lx+13,8+j);cout<<score[j];}
+            gotoxy(lx+12,5);cout<<"   ";gotoxy(lx+12,5);cout<<ti-t;
+        }if(t>0)Sleep(t);
+    }tsco=0;for(j=0;j<np;j++)tsco+=score[j];
+    if(tsco>hscor)hscor=tsco;goto i3;return 0;
+}
+void color(int c){SetConsoleTextAttribute(hout,c);}
+void gotoxy(int x,int y)
+    {COORD coord;coord.X=x;coord.Y=y;
+    SetConsoleCursorPosition(hout,coord);}
+void border(int x,int y)
+{
+    color(15);gotoxy(0,0);for(int i=0;i<x+2;i++)cout<<'-';
+    for(int i=0;i<y;i++){gotoxy(0,i+1);cout<<'|';gotoxy(x+1,i+1);cout<<"|\n";}
+    for(int i=0;i<x+2;i++)cout<<'-';
+}
+void etail(int e)
+{
+    color(15);tail[2][e]=tail[0][e];tail[3][e]=tail[1][e];gotoxy(tail[0][e],tail[1][e]);cout<<' ';
+    if(board[tail[0][e]][tail[1][e]]==1)tail[1][e]--;else if(board[tail[0][e]][tail[1][e]]==2)tail[0][e]++;else
+    if(board[tail[0][e]][tail[1][e]]==3)tail[1][e]++;else if(board[tail[0][e]][tail[1][e]]==4)tail[0][e]--;
+    if(w==false)
+        {if(tail[0][e]==lx+1)tail[0][e]=1;if(tail[1][e]==ly+1)tail[1][e]=1;
+        if(tail[0][e]==0)tail[0][e]=lx;if(tail[1][e]==0)tail[1][e]=ly;}
+    board[tail[2][e]][tail[3][e]]=0;
+}
+void direction(int sx,int sy,int fx,int fy)
+{
+    m[sx][sy]=1;
+    while(e>0)
+    {
+        for(jj=0;jj<=ly;jj++)for(ii=0;ii<=lx;ii++)dot();
+        for(jj=ly;jj>=0;jj--)for(ii=lx;ii>=0;ii--)dot();
+        for(jj=ly;jj>=0;jj--)for(ii=0;ii<=lx;ii++)dot();
+        for(jj=0;jj<=ly;jj++)for(ii=lx;ii>=0;ii--)dot();
+        gotoxy(0,0);cout<<"  ";gotoxy(0,0);cout<<e;
+    }
+
+    while(dir==0)
+    {
+        if(fx==sx)
+        {
+            if(fy-1<0){if(sy==ly)dir=3;}
+                else if(fy-1==sy)dir=3;
+            if(fy+1>ly){if(sy==0)dir=1;}
+                else if(fy+1==sy)dir=1;
+        }
+        if(fy==sy)
+        {
+            if(fx+1>lx){if(sx==0)dir=4;}
+                else if(fx+1==sx)dir=4;
+            if(fx-1<0){if(sx==lx)dir=2;}
+                else if(fx-1==sx)dir=2;
+        }
+        if(fy-1<0){if(m[fx][ly]>0&&m[fx][fy]>m[fx][ly]){fy=ly;goto t1;}}
+            else if(m[fx][fy-1]>0&&m[fx][fy]>m[fx][fy-1]){fy--;goto t1;}
+        if(fx+1>lx){if(m[0][fy]>0&&m[fx][fy]>m[0][fy]){fx=0;goto t1;}}
+            else if(m[fx+1][fy]>0&&m[fx][fy]>m[fx+1][fy]){fx++;goto t1;}
+        if(fy+1>ly){if(m[fx][0]>0&&m[fx][fy]>m[fx][0]){fy=0;goto t1;}}
+            else if(m[fx][fy+1]>0&&m[fx][fy]>m[fx][fy+1]){fy++;goto t1;}
+        if(fx-1<0){if(m[lx][fy]>0&&m[fx][fy]>m[lx][fy]){fx=lx;goto t1;}}
+            else if(m[fx-1][fy]>0&&m[fx][fy]>m[fx-1][fy]){fx--;goto t1;}
+        else dir=5;
+        t1:e=0;
+    }
+}
+void dot()
+{
+    if(m[ii][jj]==0)
+    {
+        if(jj-1<0){if(m[ii][ly]>0) {m[ii][jj]=m[ii][ly]+1;}}else
+            if(m[ii][jj-1]>0) {m[ii][jj]=m[ii][jj-1]+1;}
+        if(ii+1>lx){if(m[0][jj]>0) {m[ii][jj]=m[0][jj]+1;}}else
+            if(m[ii+1][jj]>0) {m[ii][jj]=m[ii+1][jj]+1;}
+        if(jj+1>ly){if(m[ii][0]>0){m[ii][jj]=m[ii][0]+1;}}else
+            if(m[ii][jj+1]>0){m[ii][jj]=m[ii][jj+1]+1;}
+        if(ii-1<0){if(m[lx][jj]>0){m[ii][jj]=m[lx][jj]+1;}}else
+            if(m[ii-1][jj]>0){m[ii][jj]=m[ii-1][jj]+1;}
+        if(m[ii][jj]!=0)e--;
+    }
+    if(jj-1<0){if(m[ii][ly]<m[ii][jj]&&m[ii][ly]>0){m[ii][jj]=m[ii][ly]+1;}}else
+        if(m[ii][jj-1]<m[ii][jj]&&m[ii][jj-1]>0){m[ii][jj]=m[ii][jj-1]+1;}
+    if(ii+1>lx){if(m[0][jj]<m[ii][jj]&&m[0][jj]>0){m[ii][jj]=m[0][jj]+1;}}else
+        if(m[ii+1][jj]<m[ii][jj]&&m[ii+1][jj]>0){m[ii][jj]=m[ii+1][jj]+1;}
+    if(jj+1>ly){if(m[ii][0]<m[ii][jj]&&m[ii][0]>0){m[ii][jj]=m[ii][0]+1;}}else
+        if(m[ii][jj+1]<m[ii][jj]&&m[ii][jj+1]>0){m[ii][jj]=m[ii][jj+1]+1;}
+    if(ii-1<0){if(m[lx][jj]<m[ii][jj]&&m[lx][jj]>0){m[ii][jj]=m[lx][jj]+1;}}else
+        if(m[ii-1][jj]<m[ii][jj]&&m[ii-1][jj]>0){m[ii][jj]=m[ii-1][jj]+1;}
+}
